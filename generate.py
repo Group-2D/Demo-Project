@@ -6,6 +6,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.core.window import Window
 
 from algo import algorithm_test
+import timetable__
 
 
 class GUI(App):
@@ -36,10 +37,11 @@ class GUI(App):
 
         # View Timetable Button
         view_button = Button(text="View Timetable")
+        view_button.bind(on_press = self.viewTimetable)
 
         # Generate New Timetable Button
         generate_button = Button(text="Generate New Timetable")
-        generate_button.bind(on_press = self.say_hello)
+        generate_button.bind(on_press = self.generateTimetable)
 
         # Adding buttons to the buttons layout
         buttons_layout.add_widget(view_button)
@@ -55,8 +57,12 @@ class GUI(App):
         Window.clearcolor = (0.2,0.2,0.2,0.2)
         return main_layout
 
-    def say_hello(self, instance):
+    def generateTimetable(self, instance):
         algorithm_test.main()
+
+    def viewTimetable(self, instance):
+        GUI().stop()
+        timetable__.main()
 
 
 if __name__ == '__main__':
