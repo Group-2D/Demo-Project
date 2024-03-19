@@ -14,7 +14,6 @@
 
 
 import random
-from .databaseManger import selectOnCondition
 
 #global variables
 
@@ -95,11 +94,11 @@ def determineAvailableLecturers(module_info, availableLecturers, randDay, randHo
     #makes sure the correct index for lecturer availability is selected
     index = (9*randDay) + randHour
 
-    #print(f"randDay {randDay}, randHour {randHour}, index: {index}")
+    # print(f"randDay {randDay}, randHour {randHour}, index: {index}")
 
     for i in range(0, len(lecturersList)):
         if module_info.modName in lecturersList [i][3] and lecturerTimetable [i] [randDay] [randHour] is None and lecturersList [i][4][index] == '0' :
-            #print(f"Lecturer {lecturersList [i][0]} {lecturersList [i][1]} {lecturersList [i][2]}")
+            # print(f"Lecturer {lecturersList [i][0]} {lecturersList [i][1]} {lecturersList [i][2]}")
             availableLecturers.append([lecturersList[i][0], lecturersList[i][1], lecturersList[i][2]])
 
     return availableLecturers
@@ -117,12 +116,12 @@ def checkConstraints(module_info, type, randPotentialRoom, studentsUnassigned, r
         if timetableEntries [randDay] [randHour] [randPotentialRoom] is None:
             #finds which lecturers who teach the module can teach at the specific time.
             availableLecturers = determineAvailableLecturers(module_info, availableLecturers, randDay, randHour)
-            #print(f"available lecturers: {availableLecturers}")
+            # print(f"available lecturers: {availableLecturers}")
 
             #time.sleep(100)
 
             if len(availableLecturers) == 0:
-                print("No lecturers available")
+                # print("No lecturers available")
 
                 return False
             else:
@@ -142,9 +141,9 @@ def checkConstraints(module_info, type, randPotentialRoom, studentsUnassigned, r
                 studentsUnassigned = studentsUnassigned - room [2] 
                 
                 #print(f"Students unassigned: {studentsUnassigned} ")     
-            print("Session inserted")
+            # print("Session inserted")
         else:
-            print("No availability for this time for this room.")
+            # print("No availability for this time for this room.")
 
             return False
     return True
@@ -156,7 +155,7 @@ def insertIntoTimetable(module_info, type):
     studentsUnassigned = module_info.studentsEnrolled
     moduleInserted = False
 
-    #print(f"{module_info.modName} {type}") 
+    # print(f"{module_info.modName} {type}") 
 
     while not moduleInserted:
         correctRoomType = False
@@ -172,7 +171,7 @@ def insertIntoTimetable(module_info, type):
         #inserts the requirements of the module into the timetable
         moduleInserted = checkConstraints(module_info, type, randPotentialRoom, studentsUnassigned, room)
 
-    print("Module insertion completed")
+    # print("Module insertion completed")
 
     #time.sleep(10)
 
@@ -220,5 +219,4 @@ def main():
         #adds to this array to ensure the same module does not get added to the timetable again.
         modulesCompleted.append(randMod) 
 
-    #test print
     displayTimetable()
