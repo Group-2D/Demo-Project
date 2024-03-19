@@ -52,5 +52,5 @@ class TimetableApp(App):
     def build(self):
         return TimetableSchedule()
 
-if __name__ == '__main__':
+def main():
     TimetableApp().run()
