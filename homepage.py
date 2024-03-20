@@ -2,6 +2,7 @@ from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
+from loginpage import *
 
 
 class TimetableApp(App):
@@ -17,6 +18,7 @@ class TimetableApp(App):
 
         # Login Button
         login_button = Button(text="Login")
+        login_button.bind(on_press=self.loginPageButton())
 
         # Sign up Button
         signup_button = Button(text="Sign up")
@@ -33,6 +35,9 @@ class TimetableApp(App):
         main_layout.add_widget(Label())
 
         return main_layout
+    
+    def loginPageButton(self):
+        LoginApp().run()
 
 
 if __name__ == '__main__':

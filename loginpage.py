@@ -1,8 +1,11 @@
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.core.window import Window
+from kivy.config import Config
+from userFunctions import UserFunctions  # Assuming Login class contains login logic
 
 
 class LoginScreen(BoxLayout):
@@ -14,20 +17,36 @@ class LoginScreen(BoxLayout):
         self.size_hint = (None, None)
         self.size = (300, 300)
         self.center = Window.center
+        self.user_functions = UserFunctions()
 
         # Username Input
-        self.username_label = Label(text='Username:', size_hint=(None, None), size=(100, 30), halign='left')
-        self.username_input = TextInput(size_hint=(None, None), size=(300, 50), multiline=False, halign='left')
+        self.username_label = Label(text='Username:', size_hint=(None, None), size=(100, 30), halign='left', pos_hint = {'x': -2, 'y': 0.1})
+        self.username_input = TextInput(size_hint=(None, None), size=(300, 50), multiline=False, halign='left', pos_hint = {'x': -2, 'y': 0.1})
 
         # Password Input
-        self.password_label = Label(text='Password:', size_hint=(None, None), size=(100, 30), halign='left')
-        self.password_input = TextInput(password=True, size_hint=(None, None), size=(300, 50), halign='left')
+        self.password_label = Label(text='Password:', size_hint=(None, None), size=(100, 30), halign='left', pos_hint = {'x': -2, 'y': 0.1})
+        self.password_input = TextInput(password=True, size_hint=(None, None), size=(300, 50), halign='left', pos_hint = {'x': -2, 'y': 0.1})
+
+        # Login Button
+        self.login_button = Button(text="Login",  pos_hint = {'x': -2, 'y': 0.1})
+        self.login_button.bind(on_press=self.login_pressed)  # Bind the function to the button's on_press event
 
         # Add widgets to the layout
         self.add_widget(self.username_label)
         self.add_widget(self.username_input)
         self.add_widget(self.password_label)
         self.add_widget(self.password_input)
+        self.add_widget(self.login_button)
+
+    def login_pressed(self, instance):
+        # Get the entered username and password
+        username = self.username_input.text
+        password = self.password_input.text
+        
+        self.login_function
+        
+        # print("Username:", username)
+        # print("Password:", password)
 
 
 class LoginApp(App):
