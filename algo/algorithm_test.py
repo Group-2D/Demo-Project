@@ -1,7 +1,8 @@
 #  TEMP RULES:
 #  All practs for a module will be in the same room.
 
-# how do we associate one professor with the lecture and more than one with the practicals?
+# how do we associate a professor with a lecture and multiple with the 
+#   practicals?
 # how to make professors unavailable once they have been assigned to a lecture
 # how to end the program if not spaces or availabilities can be found
 
