@@ -2,7 +2,7 @@ import psycopg2
 from psycopg2 import sql
 from typing import Any
 
-from .databaseBuilder import buildDatabaseSchema, insertDataToDb
+from databaseBuilder import buildDatabaseSchema, insertDataToDb
 
 
 class dbManger:
@@ -14,8 +14,8 @@ class dbManger:
 
     dbConnection (variable / type: any) : holds the database connection variables
     dbCursor (variable / type: any) : is the cussor which is used to access the database
-    dbCommit (variable / type: any) : holds a function used to commit any changes made to the database
-
+    lineNo (Int) : holds the line number in a given file
+    
     """
     def __init__(self) -> None:
 
@@ -23,13 +23,14 @@ class dbManger:
             host = "localhost",
             dbname = "postgres",
             user = "postgres",
-            password = "Lebihan01!",
+            password = "Lebihan01!", #change this to your password if testing etc...
             port = 5432
         )
 
         self.dbCursor = self.dbConnection.cursor()
 
-        self.dbCommit = self.dbConnection.commit()
+        self.lineNo = 0
+
 
     def dbClose(self):
         """
@@ -67,14 +68,14 @@ class dbManger:
         
         return
     
-    def selectOnCondition(self, tbl_feild: str, tbl_name: str, target: str, value: Any):
+    def selectOnCondition(self, tbl_fields: list[str], tbl_name: str, target: str, value: Any):
         """
         Selects entires from a table based of a given condition
 
         Parameters
         ----------
-        tbl_feild : str
-            The selected field from a table
+        tbl_feilds : List[str]
+            The selected fields from a table
         tbl_name : str
             The selected table 
         target : str
@@ -87,17 +88,18 @@ class dbManger:
         All values that match the statement and returns a list of tuples
             
         """
-        # ! Error occurs: 'Composed' object is not subscriptable
-        self.dbCursor.mogrify( 
-            query = sql.SQL("select {field} from {table} where {condition} = %s").format(
-                field = sql.Identifier(tbl_feild),
+        self.dbCursor.execute(
+            sql.SQL("select {fields} from {table} where {conditon} = %s").format(
+                fields = sql.SQL(',').join(
+                    sql.Identifier(n) for n in tbl_fields
+                ),
                 table = sql.Identifier(tbl_name),
-                condition = sql.Identifier(target))
+                condition = sql.Identifier(target)),
                 [value]
-        )
+            )
         return self.dbCursor.fetchall()
 
-    def insertIntoDb(self, tbl_name: str, tbl_cols: str, value: Any) -> None:
+    def insertIntoDb(self, tbl_name: str, tbl_cols: list[str], values: Any) -> None:
         """
         Inserts values into the database to a given table
 
@@ -105,8 +107,8 @@ class dbManger:
         ----------
         tbl_name : str
             table the values are being inserted into
-        tbl_cols : str
-            the column name where data is being inserted into
+        tbl_cols : List[str]
+            the column names where the data is being inserted into
         value : Any
             The data being inserted into the table
 
@@ -114,13 +116,26 @@ class dbManger:
         -------
         None
         """
-        
         self.dbCursor.execute(
-            sql.SQL("insert into {table} ({column}) values (%s)").format(
+            sql.SQL("insert into {table} ({columns}) values %s").format(
                 table = sql.Identifier(tbl_name),
-                column = sql.Identifier(tbl_cols)),
-                [value]
-            )
+                columns = sql.SQL(',').join(
+                    sql.Identifier(n) for n in tbl_cols
+                )),
+                [values]
+                
+        )
+
+        self.dbConnection.commit()
+        # ? do we need to keep this ^ the above works for multiple columns with different data types to be inserted
+        # self.dbCursor.execute(
+        #     sql.SQL("insert into {table} ({column}) values (%s)").format(
+        #         table = sql.Identifier(tbl_name),
+        #         column = sql.Identifier(tbl_cols)),
+        #         [value]
+        #     )
+        # self.dbConnection.commit()
+
         return 
     
     def removeDataEqual(self, tbl_name: str, tbl_column: str, value: Any) -> None:
@@ -142,6 +157,8 @@ class dbManger:
                 column = sql.Identifier(tbl_column)),
                 [value]
             )
+    
+        self.dbConnection.commit()
 
         return
 
@@ -157,32 +174,19 @@ class dbManger:
         self.dbCursor.execute(
             """DROP TABLE IF EXISTS %s CASCADE;""" % tbl_name
         )
+        self.dbConnection.commit()
+        return 
+    
+
+    def insertFile(self, file: Any) -> None:
+        #! method reads the file, need to check the input of the line before using the insert function. 
+        file = open(file, "r")
+
+        for line in file:
+
+            self.lineNo += 1
+            insertionType = line.lower().split(",")[0]
+
+            print(insertionType)
 
         return 
-
-'''
-session = dbManger()
-
-print(type(session.dbConnection))
-print(type(session.dbCursor))
-
-buildDatabaseSchema(session.dbCursor)
-insertDataToDb(session.dbCursor)
-
-session.selectAll('building')
-
-session.insertIntoDb('building', 'building_name','Libiary')
-print()
-session.selectAll('building')
-print()
-
-session.removeDataEqual('building', 'building_name', 'Park')
-
-session.selectAll('building')
-
-session.removeTable('building')
-
-session.dbCommit
-
-session.dbClose()A
-'''
