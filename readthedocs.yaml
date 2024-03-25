@@ -10,5 +10,5 @@ build:
 
 #build documentation 
 sphinx:
-  configuration: docs/source/conf.py
+  configuration: conf.py
 
