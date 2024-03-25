@@ -56,6 +56,7 @@ def buildDatabaseSchema(dbCursor: Any) -> None:
             );
             """
         )
+
         return 
 
 def insertDataToDb(dbCursor: Any):

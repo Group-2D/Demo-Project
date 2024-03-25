@@ -185,8 +185,18 @@ class dbManger:
         for line in file:
 
             self.lineNo += 1
-            insertionType = line.lower().split(",")[0]
+            # needs testing to check the values are properly split
+            table = line.lower().split(",")[0]
+            values = line.lower().split(",")[1:]
+            print(table)
+            print(values)
 
-            print(insertionType)
+            self.dbCursor.execute(
+                sql.SQL("insert into {table} values %s").format(
+                    table = sql.Identifier(table)),
+                [values]
+            )
 
+            self.dbConnection.commit()
+            
         return 
