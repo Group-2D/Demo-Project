@@ -32,6 +32,10 @@ The project is built in Python using various libaires as listed above and Postgr
 
 Below are the steps we would take to install the dependencies
 
+### Cloning the repository using Git 
+
+Guide to Cloning the repository via [Github Website](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
+
 ### Python Link and Documentation
 
 These are the links to download Python and the language documentation:
@@ -52,12 +56,12 @@ Typing: (Not Required) Used to improve comments and Type Scripting to the progra
 For installing the various Python Libaries, we recomend using the package manger [pip](https://pypi.org/project/pip/)
 
 * Psycopg2: 2.9.9
-'''bash
+'''
 pip install psycopg2
 ''' 
 
 * Kivy: 
-'''bash
+'''
 pip install kivy
 '''
 
@@ -80,11 +84,11 @@ Once all the dependencies have been downloaded and successfully installed, you w
 
 ### Final Steps
 
-1. Navigate to the [Config.py] file / Navigate to the [databaseManager.py] file
+1. Navigate to the __Config.py__ file / Navigate to the __databaseManager.py__ file
 2. You will need to enter the following infomation:
     - host --> This is the name of the sever the database is hosted from
     - dbname --> The name of the database the data is being stored on
-    - password --> Ypur password, this is the same password you used when first opening [pgAdmin_4] 
+    - password --> Ypur password, this is the same password you used when first opening __pgAdmin_4__ 
 
 3. Save these changes in the file
 
@@ -94,21 +98,24 @@ After making these changes, the project should run.
 ## How to use the Project
 
 
-# Navigating the GUI (Graphical User Interface)
-# Using the Database
-# Generating a Timetable 
+### Navigating the GUI (Graphical User Interface)
+### Using the Database
 
-# Known Problems 
+#### Database ERD
+![Database ERd](image.png)
+
+### Generating a Timetable 
+### Known Problems 
 
 
 ## Credits
 
 ### Group 2D 
 
-    - Kieron / up2109872
-    - James / 
-    - Will / 
-    - Andrew / 
-    - Aj / 
-    - Jack / 
-    - Ebere / 
+* Kieron / up2109872
+*
+*
+*
+*
+*
+*
