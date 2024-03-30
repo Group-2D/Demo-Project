@@ -1,6 +1,6 @@
 # University Timetable Generator 
 
-The project is designed to generate a university timetable
+The project is designed to generate a university timetable.
 
 ## Table Of Contents
 
@@ -28,9 +28,9 @@ The Technologies used in the project:
 
 ## Installation
 
-The project is built in Python using various libaires as listed above and PostgresSQL 
+The project is built in Python using various libaires as listed above and PostgresSQL.
 
-Below are the steps we would take to install the dependencies
+Below are the steps we would take to install the dependencies.
 
 ### Cloning the repository using Git 
 
@@ -74,8 +74,8 @@ We recommend downloading PostgresSQL locally to your machine as it will make run
 ### Download Steps
 
 1. Download the correct and most recent download for your OS (Windows, Linux, MacOS, etc...)
-2. Once the Postgres has downloaded, navigate to your start / apps section of your computer / laptop / etc and search for __pgAdmin_4__
-3. On your first time openning __pgAdmin_4__ you will need to set a password, rememeber the password, you will need this password for configuration
+2. Once the Postgres has downloaded, navigate to your start / apps section of your computer / laptop / etc and search for __pgAdmin_4__.
+3. On your first time openning __pgAdmin_4__ you will need to set a password, rememeber the password, you will need this password for configuration.
 4. The setup should now be complete. 
 
 ## Final setup 
@@ -86,20 +86,25 @@ Once all the dependencies have been downloaded and successfully installed, you w
 
 1. Navigate to the __Config.py__ file / Navigate to the __databaseManager.py__ file
 2. You will need to enter the following infomation:
-    - host --> This is the name of the sever the database is hosted from
-    - dbname --> The name of the database the data is being stored on
-    - password --> Ypur password, this is the same password you used when first opening __pgAdmin_4__ 
+    - host --> The name of the server the database is hosted on.
+    - dbname --> The name of the database the data is being stored on.
+    - password --> Ypur password, this is the same password you used when first opening __pgAdmin_4__.
 
-3. Save these changes in the file
+3. Save these changes in the file.
 
 After making these changes, the project should run. 
 
-
 ## How to use the Project
 
+This area is used to provide various guides on how to use the timetable generator program as intended and avoid various issues. 
 
 ### Navigating the GUI (Graphical User Interface)
+
+This section us used to help users navigate and interact with the GUI.
+
 ### Using the Database
+
+This section is used to show the stucture of the database and various use cases on inserting, updating and manipulting data in the database
 
 #### Database ERD
 ![Database ERd](image.png)
