@@ -41,15 +41,15 @@ These are the links to download Python and the language documentation:
 
 ## The Python libaries used: 
 
-Psycopg2: Used to connect Pytho to a PostgresSQL database and run quiers in Python [Documentation -->](https://www.psycopg.org/docs/)
+Psycopg2: Used to connect Pytho to a PostgresSQL database and run quiers in Python: [Documentation](https://www.psycopg.org/docs/)
 
-Kivy: Used to create the GUI for the project [Documentation -->](https://kivy.org/doc/)
+Kivy: Used to create the GUI for the project: [Documentation](https://kivy.org/doc/)
 
-Typing: (Not Required) Used to improve comments and Type Scripting to the program [Documentation -->](https://docs.python.org/3/library/typing.html)
+Typing: (Not Required) Used to improve comments and Type Scripting to the program: [Documentation](https://docs.python.org/3/library/typing.html)
 
 ### Installation Guide For Python Libaries: 
 
-For installing the various Python Libaries, we recomend using the package manger [pip]
+For installing the various Python Libaries, we recomend using the package manger [pip](https://pypi.org/project/pip/)
 
 * Psycopg2: 2.9.9
 '''bash
@@ -63,15 +63,15 @@ pip install kivy
 
 ## Installation Guide For PostgresSQL
 
-Download link for PostgreSQL: [Download](https://www.postgresql.org/download/)
+Download link for PostgreSQL: [PostgresSQL Download](https://www.postgresql.org/download/)
 
 We recommend downloading PostgresSQL locally to your machine as it will make running the program easier, this will also allow you more control and ability to test any changes made to the database. 
 
 ### Download Steps
 
 1. Download the correct and most recent download for your OS (Windows, Linux, MacOS, etc...)
-2. Once the Postgres has downloaded, navigate to your start / apps section of your computer / laptop / etc and search for [pgAdmin_4] 
-3. On your first time openning [pgAdmin_4] you will need to set a password, rememeber the password, you will need this password for configuration
+2. Once the Postgres has downloaded, navigate to your start / apps section of your computer / laptop / etc and search for __pgAdmin_4__
+3. On your first time openning __pgAdmin_4__ you will need to set a password, rememeber the password, you will need this password for configuration
 4. The setup should now be complete. 
 
 ## Final setup 
@@ -103,7 +103,7 @@ After making these changes, the project should run.
 
 ## Credits
 
-# Group 2D 
+### Group 2D 
 
     - Kieron / up2109872
     - James / 
