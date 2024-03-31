@@ -47,7 +47,7 @@ class dbManger:
         self.dbCursor.close()
         self.dbConnection.close()
     
-    def selectAll(self, table: str):
+    def selectAll(self, table: str) -> Any:
         """
         Gets all the data from a given table
         
@@ -59,14 +59,23 @@ class dbManger:
         -------
         None
         """
-        self.dbCursor.execute(
-            """SELECT * FROM %s """ % table
-        )
 
-        for row in self.dbCursor.fetchall():
-            print(row)
+        if type(table) != str:
+            print(TypeError)
+            return False
+
+        try:
+            self.dbCursor.execute(
+                """SELECT * FROM %s """ % table.lower()
+            )
         
-        return
+        except psycopg2.ProgrammingError as error:
+            print(error)
+            return False
+    
+        else:
+            return self.dbCursor.fetchall(),
+        
     
     def selectOnCondition(self, tbl_fields: list[str], tbl_name: str, target: str, value: Any):
         """
@@ -88,16 +97,35 @@ class dbManger:
         All values that match the statement and returns a list of tuples
             
         """
-        self.dbCursor.execute(
-            sql.SQL("select {fields} from {table} where {conditon} = %s").format(
-                fields = sql.SQL(',').join(
-                    sql.Identifier(n) for n in tbl_fields
-                ),
-                table = sql.Identifier(tbl_name),
-                condition = sql.Identifier(target)),
-                [value]
-            )
-        return self.dbCursor.fetchall()
+        if type(tbl_name) != str:
+            print(TypeError)
+            return False
+        
+        for field in tbl_fields:
+            if type(field) != str:
+                print(field, "is wrong Type", TypeError)
+                return False
+            
+        if type(target) != str:
+            print(TypeError)
+            return False
+        
+        try:    
+            self.dbCursor.execute(
+                sql.SQL("select {fields} from {table} where {conditon} = %s").format(
+                    fields = sql.SQL(',').join(
+                        sql.Identifier(n.lower()) for n in tbl_fields
+                    ),
+                    table = sql.Identifier(tbl_name.lower()),
+                    condition = sql.Identifier(target.lower())),
+                    [value]
+                )
+        
+        except psycopg2.ProgrammingError and psycopg2.OperationalError as error:
+            print(error)
+            return False
+        
+        return self.dbCursor.fetchall(), True
 
     def insertIntoDb(self, tbl_name: str, tbl_cols: list[str], values: Any) -> None:
         """
@@ -179,6 +207,14 @@ class dbManger:
     
 
     def insertFile(self, file: Any) -> None:
+        """
+        Inserts values from a file into the correct table in the database
+
+        Parameters
+        ----------
+        file : Any
+            a file containing data that is to be inserted into the database
+        """
         #! method reads the file, need to check the input of the line before using the insert function. 
         file = open(file, "r")
 
