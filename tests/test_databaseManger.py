@@ -1,6 +1,6 @@
 import unittest
 
-from ..algo.databaseManger import dbManger
+from algo.databaseManger import dbManger
 
 class TestDatabasseManger(unittest.TestCase):
 
