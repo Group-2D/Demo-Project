@@ -236,3 +236,9 @@ class dbManger:
             self.dbConnection.commit()
             
         return 
+
+
+
+session = dbManger()
+
+print(session.selectAll('lecturer'))

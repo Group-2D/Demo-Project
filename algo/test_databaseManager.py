@@ -1,25 +1,23 @@
 import unittest
-# ! anyone know how to solve import issues from files in a differnt folder
-from databaseManger import dbManger
+from databaseManager import dbManger
 
-class TestDatabasseManger(unittest.TestCase):
+class TestDatabaseManger(unittest.TestCase):
 
     #used to setup repeated values in testing
     @classmethod
     def setUpClass(cls) -> None:
         #creates a singular session to test each method in the class 
         session = dbManger()
-        
         # Creating test data to run automated tests on the class and methods
         session.dbCursor.execute(
             """
-            INSERT INTO IF NOT EXSISTS lecturers (lecturer_fname, lecturer_lname, lecturer_availability) VALUES
+            INSERT INTO lecturer (lecturer_fname, lecturer_lname, lecturer_availability) VALUES
             ('Taylor', 'Swift', 'EX001'),
             ('Adam', 'Levine', 'EX003'),
             ('Lewis', 'Capaldi', 'EX009'),
             ('Katy', 'Perry', 'EX001'); 
             
-            INSERT INTO IF NOT EXSISTS building (building_name) VALUES
+            INSERT INTO building (building_name) VALUES
             ('Angelesea'),
             ('Liongate'),
             ('Park'),
@@ -60,3 +58,9 @@ class TestDatabasseManger(unittest.TestCase):
         
         #runs the test
         self.assertEquals(result, expected)
+
+
+#driver function to run the unittests
+
+if __name__ == '__main__':
+    unittest.main()
