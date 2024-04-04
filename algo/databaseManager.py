@@ -74,7 +74,7 @@ class dbManager:
             return False
     
         else:
-            return self.dbCursor.fetchall(),
+            return 
         
     
     def selectOnCondition(self, tbl_fields: list[str], tbl_name: str, target: str, value: Any):
@@ -128,6 +128,7 @@ class dbManager:
         return self.dbCursor.fetchall(), True
 
     def insertIntoDb(self, tbl_name: str, tbl_cols: list[str], values: Any) -> None:
+        #! this function needs to check for duplicate inputs
         """
         Inserts values into the database to a given table
 
