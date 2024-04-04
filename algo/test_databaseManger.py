@@ -1,6 +1,6 @@
 import unittest
 # ! anyone know how to solve import issues from files in a differnt folder
-from algo.databaseManger import dbManger
+from databaseManger import dbManger
 
 class TestDatabasseManger(unittest.TestCase):
 
