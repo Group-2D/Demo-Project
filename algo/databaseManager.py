@@ -5,7 +5,7 @@ from typing import Any
 from databaseBuilder import buildDatabaseSchema, insertDataToDb
 
 
-class dbManger:
+class dbManager:
     """
     Class is used to mangage inputs and outputs from the database
 
