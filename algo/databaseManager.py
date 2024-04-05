@@ -112,7 +112,7 @@ class dbManager:
         
         try:    
             self.dbCursor.execute(
-                sql.SQL("select {fields} from {table} where {conditon} = %s").format(
+                sql.SQL("select {fields} from {table} where {condition} = %s").format(
                     fields = sql.SQL(',').join(
                         sql.Identifier(n.lower()) for n in tbl_fields
                     ),
@@ -125,7 +125,7 @@ class dbManager:
             print(error)
             return False
         
-        return self.dbCursor.fetchall(), True
+        return self.dbCursor.fetchall()
 
     def insertIntoDb(self, tbl_name: str, tbl_cols: list[str], values: Any) -> None:
         #! this function needs to check for duplicate inputs
