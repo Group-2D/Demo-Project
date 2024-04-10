@@ -126,6 +126,21 @@ class dbManager:
             return False
         
         return self.dbCursor.fetchall()
+    
+    def getTables(self):
+        """
+        gets all the table names in the database
+
+        Returns
+        -------
+        List[Str]
+            A list of strings that reference the names of all the tables in the database
+        """
+        self.dbCursor.execute(
+            sql.SQL("select tablename from pg_catalog.pg_tables where schemaname != 'information_schema' and schemaname != 'pg_catalog'")
+        ) 
+
+        return self.dbCursor.fetchall()
 
     def insertIntoDb(self, tbl_name: str, tbl_cols: list[str], values: Any) -> None:
         #! this function needs to check for duplicate inputs
@@ -237,3 +252,20 @@ class dbManager:
             self.dbConnection.commit()
             
         return 
+    
+
+
+
+def main():
+
+    session = dbManager()
+
+    session.getTables()
+
+    print(session.dbCursor.fetchall())
+
+    session.dbClose()
+
+
+if __name__ == '__main__':
+    main()
