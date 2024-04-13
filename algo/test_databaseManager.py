@@ -61,33 +61,89 @@ class Test_DbManager_SelectAllOnCondition(unittest.TestCase):
     def tearDown(self) -> None:
         self.session.dbClose()
 
-    #test case 1 
     def test_case_1(self):
         self.assertEqual((self.session.selectOnCondition(["lecturer_fname", "lecturer_lname"] , "lecturer" , "lecturer_fname", "Taylor")), [("Taylor", "Swift")])
 
-    #test case 2
     def test_case_2(self):
-        pass
+        self.assertEqual((self.session.selectOnCondition(["lecturer_fname", "lecturer_lname"], "lecturer", "lecturer_fname", "Swift")), False)
 
-    #test case 3
     def test_case_3(self):
-        pass
+        self.assertEqual((self.session.selectOnCondition(["lecturer_fname", "lecturer_lname"], "lecturer", "lecturer_fname", "taylor")), False)
 
-    #test case 4
     def test_case_4(self):
-        pass
+        self.assertEqual((self.session.selectOnCondition(["lecturer_fname", "lecturer_lname"], "lecturer", "lecturer_fname", True)), False)
 
-    #test case 5
     def test_case_5(self):
-        pass
+        self.assertEqual((self.session.selectOnCondition(["lecturer_fname", "lecturer_lname"], "lecturer", "lecturer_fname", None)), False)
 
-    #test case 6
     def test_case_6(self):
-        pass
+        self.assertEqual((self.session.selectOnCondition(["lecturer_fname", "lecturer_lname"], "lecturer", "lecturer_fname", 2)), False)
 
-    #test case 7
+
     def test_case_7(self):
-        pass
+        self.assertEqual((self.session.selectOnCondition(["lecturer_fname", "lecturer_lname"], "lecturer", lecturer_fname, "Taylor")), False)
+
+    def test_case_8(self):
+        self.assertEqual((self.session.selectOnCondition(["lecturer_fname", "lecturer_lname"], "lecturer", 2, "Taylor")), False)
+
+    def test_case_9(self):
+        self.assertEqual((self.session.selectOnCondition(["lecturer_fname", "lecturer_lname"], "lecturer", True, "Taylor")), False)
+
+    def test_case_10(self):
+        self.assertEqual((self.session.selectOnCondition(["lecturer_fname", "lecturer_lname"], "lecturer", None, "Taylor")), False)
+
+    def test_case_11(self):
+        self.assertEqual((self.session.selectOnCondition(["lecturer_fname", "lecturer_lname"], "lecturer", "Lecturer_Fname", "Taylor")), False)
+
+
+    def test_case_12(self):
+        self.assertEqual((self.session.selectOnCondition(["lecturer_fname", "lecturer_lname"] , "Lecturer" , "lecturer_fname", "Taylor")), [("Taylor", "Swift")])
+
+    def test_case_13(self):
+        self.assertEqual((self.session.selectOnCondition(["lecturer_fname", "lecturer_lname"] , "lecturers" , "lecturer_fname", "Taylor")), False)
+
+    def test_case_14(self):
+        self.assertEqual((self.session.selectOnCondition(["lecturer_fname", "lecturer_lname"] , 6 , "lecturer_fname", "Taylor")), False)
+
+    def test_case_15(self):
+        self.assertEqual((self.session.selectOnCondition(["lecturer_fname", "lecturer_lname"] , None , "lecturer_fname", "Taylor")), False)
+
+    def test_case_16(self):
+        self.assertEqual((self.session.selectOnCondition(["lecturer_fname", "lecturer_lname"] , False , "lecturer_fname", "Taylor")), False)
+
+    def test_case_17(self):
+        self.assertEqual((self.session.selectOnCondition(["lecturer_fname", "lecturer_lname"] , "$%IJINSIBUI" , "lecturer_fname", "Taylor")), False)
+
+
+    def test_case_18(self):
+        self.assertEqual((self.session.selectOnCondition(("lecturer_fname", "lecturer_lname") , "lecturer" , "lecturer_fname", "Taylor")), False)
+
+    def test_case_19(self):
+        self.assertEqual((self.session.selectOnCondition(["", ""], "lecturer" , "lecturer_fname", "Taylor")), [])
+    
+    def test_case_20(self):
+        self.assertEqual((self.session.selectOnCondition([], "lecturer", "lecturer_fname", "Taylor")), [])
+    
+    def test_case_21(self):
+        self.assertEqual((self.session.selectOnCondition(["kdfjadsf", "True"], "lecturer", "lecturer_fname", "Taylor")), False)
+
+    def test_case_22(self):
+        self.assertEqual((self.session.selectOnCondition(["Lecture_fname", "lecturer_lName"], "lecturer", "lecturer_fname", "Taylor")), [("Taylor", "Swift")])
+    
+    def test_case_23(self):
+        self.assertEqual((self.session.selectOnCondition([4, -1], "lecturer", "lecturer_fname", "Taylor")), False)
+
+    def test_case_24(self):
+        self.assertEqual((self.session.selectOnCondition([True, False], "lecturer", "lecturer_fname", "Taylor")), False)
+
+    def test_case_25(self):
+        self.assertEqual((self.session.selectOnCondition([None, "lecturer_lname"], "lecturer", "lecturer_fname", "Taylor")), False)
+
+
+
+
+
+
 
 class Test_DbManager_InsertIntoDb(unittest.TestCase):
     #set up and tear down functions
