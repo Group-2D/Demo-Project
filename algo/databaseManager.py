@@ -185,6 +185,19 @@ class dbManager:
         for col in self.dbCursor.fetchall():
             tbl_cols.add(col[0])
         return tbl_cols
+
+    def count_db_enteries(self, tbl_name: str, col_name: str):
+
+        self.dbCursor.execute(
+            sql.SQL("select count({column_name}) from {table}").format(
+                table = sql.Identifier(tbl_name.lower()),
+                column_name = sql.Identifier(col_name.lower())
+
+            )
+        )
+
+        return
+        
     
     def insertIntoDb(self, tbl_name: str, tbl_cols: list[str], values: Any):
         #! this function needs to check for duplicate inputs
@@ -328,17 +341,16 @@ class dbManager:
             self.dbConnection.commit()
             
         return 
-    
-
-
 
 def main():
 
     session = dbManager()
 
-    session.setTblSet()
-    print(session.tblSet)
+    session.count_db_enteries('lecturer', 'lecturer_id')
+    print(session.dbCursor.fetchall())
 
+    session.selectAll('lecturer')
+    print(session.dbCursor.fetchall())
     session.dbClose()
 
 
