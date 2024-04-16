@@ -5,6 +5,8 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.core.window import Window
 
+from hashlib import sha256
+
 class LoginScreen(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -37,7 +39,19 @@ class LoginScreen(BoxLayout):
     def login(self, instance):
         username = self.username_input.text
         password = self.password_input.text
-        # Implement your login logic here
+
+        loginkey = str(username) + ":" + str(password)
+
+        shaLoginkey = sha256()
+        shaLoginkey.update(loginkey.encode('utf-8'))
+        encryptedLoginKey = shaLoginkey.hexdigest()
+
+        with open("userkey.txt","r") as file:
+            savedUserkey = file.read()
+            if savedUserkey == encryptedLoginKey:
+                print("access granted")
+            else:
+                print("access denied")
 
 
 class LoginApp(App):
