@@ -17,6 +17,7 @@ class dbManager:
     lineNo (Int) : holds the line number in a given file
     
     """
+
     def __init__(self) -> None:
 
         self.dbConnection = psycopg2.connect(
@@ -187,7 +188,16 @@ class dbManager:
         return tbl_cols
 
     def count_db_enteries(self, tbl_name: str, col_name: str):
+        """
+        returns the number of enteries in a database table
 
+        Parameters
+        ----------
+        tbl_name : str
+            the table being quirried 
+        col_name : str
+            the column being counted
+        """
         self.dbCursor.execute(
             sql.SQL("select count({column_name}) from {table}").format(
                 table = sql.Identifier(tbl_name.lower()),
