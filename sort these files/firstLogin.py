@@ -5,6 +5,8 @@
 
 # subsequent admins?
 
+import subprocess
+import sys
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
@@ -14,6 +16,19 @@ from kivy.core.window import Window
 
 from hashlib import sha256
 
+# ensures pip is installed
+subprocess.check_call([sys.executable, 
+                        "-m",
+                        "ensurepip", 
+                        "--upgrade"])
+
+# ensures that all the modules required for the program to run are installed
+subprocess.check_call([sys.executable, 
+                        "-m", 
+                        "pip", 
+                        "install", 
+                        "-r", 
+                        "requirements.txt"])
 
 def firstLogin(userkey):
     
