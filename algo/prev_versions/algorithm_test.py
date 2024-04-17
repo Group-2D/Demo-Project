@@ -17,147 +17,43 @@ professorTimetable = [
 numOfModules = 6
 
 
-#declare variables
-modName = []
-lecHours = []
-practHours = []
-tutHours = []
-studentsEnrolled = []
-hoursRequiredForPract = []
-roomsList = []
-professorsList = []
 modules_list = []
 
-
-def fillModuleLists(session):
-    # finds the number of entries in the module list table                                                           
-    session.count_db_entries("modules", "mod_id")
-    length = session.dbCursor.fetchone()[0]
-    print(f"Module: {length}") 
-
-    for i in range(0, length + 1):
-        modName [i] = session.selectOnCondition(["mod_name"], "modules", "mod_id", i)
-        lecHours [i] = session.selectOnCondition(["mod_enrolled"], "modules", "mod_id", i)
-        practHours [i] = session.selectOnCondition(["mod_lectures"], "modules", "mod_id", i)
-        tutHours [i] = session.selectOnCondition(["mod_practicals"], "modules", "mod_id", i)
-        studentsEnrolled [i] = session.selectOnCondition(["mod_tutorials"], "modules", "mod_id", i)
-        hoursRequiredForPract [i] = session.selectOnCondition(["hours_for_pract"], "modules", "mod_id", i)
-
-
-def fillRoomLists(session):
-    # finds the number of entries in the room list table
-    session.count_db_entries("room", "room_id")[0]
-    length = session.dbCursor.fetchone()[0]
-    print(f"Room: {length}")   
-
-    for i in range (0, length + 1):
-        roomsList [i] [0] = session.selectOnCondition(["room_name"], 'room', 'room_id', i)
-        roomsList [i] [1] = session.selectOnCondition(["room_capacity"], 'room', 'room_id', i)
-        roomsList [i] [2] = session.selectOnCondition(["building_id"], 'room', 'room_id', i)
-        roomsList [i] [3] = session.selectOnCondition(["room_type"], 'room', 'room_id', i)
-
-
-def fillProfessorsLists(session):
-    # finds the number of entries in the lecturer list table
-    session.count_db_entries("lecturer", "lecturer_id")
-    length = session.dbCursor.fetchone()[0]
-    print(f"Lecturer: {length}")
-
-    #professorsList = [[] for _ in range(length + 1)]
-
-    for i in range (0, length + 1):
-        #professorsList [i] [0] = session.selectOnCondition(["lecturer_title", 'lecturer_fname', 'lecturer_lname'], "lecturer", "lecturer_id", i)
-        professorsList [i] [0] = session.selectOnCondition(["lecturer_title"], "lecturer", "lecturer_id", i)
-        print(i)
-        print(professorsList[i][0])
-        professorsList [i] [1] = session.selectOnCondition(["lecturer_fname"], 'lecturer', 'lecturer_id', i)
-        professorsList [i] [2] = session.selectOnCondition(["lecturer_lname"], 'lecturer', 'lecturer_id', i)
-        professorsList [i] [3] = session.selectOnCondition(["lecturer_modules"], 'lecturer', 'lecturer_id', i)
-        professorsList [i] [3] = session.selectOnCondition(["lecturer_availability"], 'lecturer', 'lecturer_id', i)
-    
-    print(professorsList)
-    print()
-
-# modules_list = []
-# modName = ["Architecture & Operating Systems", 
-#            "Comp Tutorial 4", 
-#            "Core Computing Concepts", 
-#            "Database Systems Development", 
-#            "Networks", 
-#            "Programming"]
-
-# lecHours = [1, 0, 1, 1, 1, 1] 
-# practHours = [2, 0, 1, 2, 1, 2] 
-# tutHours = [0, 1, 0, 0, 0, 0]
-# studentsEnrolled = [200, 200, 200, 200, 200, 150]
-# hoursRequiredForPract = [1, 1, 1, 1, 1, 1]
-
-
-# roomsList = [["A2.03", "Anglesea", 40, "pract"],
-#             ["FTC_Floor1", "Future Technology Centre", 80, "pract"], 
-#             ["FTC_Floor2", "Future Technology Centre", 80, "pract"], 
-#             ["FTC_Floor1", "Future Technology Centre", 50, "tut"],
-#             ["L0.14a", "LionGate", 67, "tut"],
-#             ["RLT1", "Richmond Building", 330, "lec"], 
-#             ["RLT2", "Richmond Building", 160, "lec"], 
-#             ["R1.03", "Richmond Building", 24, "pract"]]
-
-
-# professorsList = [['Dr', 
-#                   'John',
-#                   'Smith', 
-#                   'Architecture & Operating Systems, Comp Tutorial 4', 
-#                   '000000100000000100000000100000000100000000100'],
-#                 ['Dr', 
-#                  'Lisa',
-#                  'Franklin', 
-#                  'Core Computing Concepts', 
-#                  '000000000000000000000000000000000000000000000'],
-#                 ['Dr', 
-#                  'Herbert',
-#                  'Jones', 
-#                  'Core Computing Concepts', 
-#                  '000000000000000000000000000000000000000000000'],
-#                 ['Dr', 
-#                  'Richard',
-#                  'Johnson', 
-#                  'Database Systems Development', 
-#                  '000010000000000010000000000000010000000000000'],
-#                 ['Dr', 
-#                  'Hugh',
-#                  'Piper',
-#                  'Programming', 
-#                  '000000000000000000000000000000000000000000000'],
-#                 ['Dr',
-#                  'Javier',
-#                  'Rodriguez', 
-#                  'Networks', 
-#                  '000000000000000000000000000000000000000000000'],
-#                 ['Dr', 
-#                  'Kathlyn',
-#                  'Ferguson', 
-#                  'Networks', 
-#                  '000000000000001000000000000100000000000000001']]
-
-#tidy variables/arrays
-modsCompleted = []
-
+module = Module()
+professor = Professor()
 
 class Module:
     def __init__(self, 
-                 moduleName, 
-                 lectureHours, 
-                 practicalHours, 
-                 tutorialHours, 
-                 students_enrolled, 
-                 hours_required_for_pract):
+                 moduleName=None, 
+                 lectureHours=None, 
+                 practicalHours=None, 
+                 tutorialHours=None, 
+                 students_enrolled=None):
         
         self.modName = moduleName
         self.lecHours = lectureHours
         self.practHours = practicalHours
         self.tutHours = tutorialHours
         self.studentsEnrolled = students_enrolled
-        self.hoursRequiredForPract = hours_required_for_pract
+
+    @classmethod
+    def fillModuleLists(self, cls, session, modules_list):
+        # finds the number of entries in the module list table                                                           
+        session.count_db_entries("modules", "mod_id")
+        length = session.dbCursor.fetchone()[0]
+        print(f"Module: {length}") 
+
+        for i in range(length):
+            #mod_info = session.selectOnCondition(["mod_name, mod_enrolled, mod_lectures, mod_practicals, mod_tutorials"], "modules", "mod_id", i+1)
+            modName = session.selectOnCondition(["mod_name"], "modules", "mod_id", i+1)
+            lecHours = session.selectOnCondition(["mod_enrolled"], "modules", "mod_id", i+1)
+            practHours = session.selectOnCondition(["mod_lectures"], "modules", "mod_id", i+1)
+            tutHours = session.selectOnCondition(["mod_practicals"], "modules", "mod_id", i+1)
+            studentsEnrolled = session.selectOnCondition(["mod_tutorials"], "modules", "mod_id", i+1)
+            module = cls(modName, lecHours, practHours, tutHours, studentsEnrolled)
+            modules_list.append(module)
+
+            
 
 
 class Room:
@@ -179,25 +75,116 @@ class Professor:
         self.professorName = professor_name
         self.modulesTaught = modules
 
+    def fillProfessorsLists(session):
+        # finds the number of entries in the lecturer list table
+        session.count_db_entries("lecturer", "lecturer_id")
+        length = session.dbCursor.fetchone()[0]
+        print(f"Lecturer: {length}")
+
+        professorsList = [[None for _ in range(5)] for _ in range(length)]
+
+        #professorsList = [[] for _ in range(length + 1)]
+
+        for i in range (length):
+            #professorsList [i] [0] = session.selectOnCondition(["lecturer_title", 'lecturer_fname', 'lecturer_lname'], "lecturer", "lecturer_id", i)
+            professorsList [i] [0] = session.selectOnCondition(["lecturer_title"], "lecturer", "lecturer_id", i + 1)
+            print(i)
+            print(professorsList[i][0])
+            professorsList [i] [1] = session.selectOnCondition(["lecturer_fname"], 'lecturer', 'lecturer_id', i + 1)
+            professorsList [i] [2] = session.selectOnCondition(["lecturer_lname"], 'lecturer', 'lecturer_id', i + 1)
+            professorsList [i] [3] = session.selectOnCondition(["lecturer_modules"], 'lecturer', 'lecturer_id', i + 1)
+            professorsList [i] [4] = session.selectOnCondition(["lecturer_availability"], 'lecturer', 'lecturer_id', i + 1)
+        
+        print(professorsList)
+        print()
+
+        return professorsList
+
+
+#declare variables
+modName = []
+lecHours = []
+practHours = []
+tutHours = []
+studentsEnrolled = []
+roomsList = []
+professorsList = []
+modules_list = []
+#tidy variables/arrays
+modsCompleted = []
+
+
+module = Module()
+
+
+def fillRoomLists(session):
+    # finds the number of entries in the room list table
+    session.count_db_entries("room", "room_id")[0]
+    length = session.dbCursor.fetchone()[0]
+    print(f"Room: {length}")   
+
+    roomsList = [[None for _ in range(4)] for _ in range(length)]
+
+    for i in range (0, length):
+        roomsList [i] [0] = session.selectOnCondition(["room_name"], 'room', 'room_id', i+1)
+        roomsList [i] [1] = session.selectOnCondition(["room_capacity"], 'room', 'room_id', i+1)
+        roomsList [i] [2] = session.selectOnCondition(["building_id"], 'room', 'room_id', i+1)
+        roomsList [i] [3] = session.selectOnCondition(["room_type"], 'room', 'room_id', i+1)
+
+
+def fillProfessorsLists(session):
+    # finds the number of entries in the lecturer list table
+    session.count_db_entries("lecturer", "lecturer_id")
+    length = session.dbCursor.fetchone()[0]
+    print(f"Lecturer: {length}")
+
+    professorsList = [[None for _ in range(5)] for _ in range(length)]
+
+    #professorsList = [[] for _ in range(length + 1)]
+
+    for i in range (length):
+        #professorsList [i] [0] = session.selectOnCondition(["lecturer_title", 'lecturer_fname', 'lecturer_lname'], "lecturer", "lecturer_id", i)
+        professorsList [i] [0] = session.selectOnCondition(["lecturer_title"], "lecturer", "lecturer_id", i + 1)
+        print(i)
+        print(professorsList[i][0])
+        professorsList [i] [1] = session.selectOnCondition(["lecturer_fname"], 'lecturer', 'lecturer_id', i + 1)
+        professorsList [i] [2] = session.selectOnCondition(["lecturer_lname"], 'lecturer', 'lecturer_id', i + 1)
+        professorsList [i] [3] = session.selectOnCondition(["lecturer_modules"], 'lecturer', 'lecturer_id', i + 1)
+        professorsList [i] [4] = session.selectOnCondition(["lecturer_availability"], 'lecturer', 'lecturer_id', i + 1)
+    
+    print(professorsList)
+    print()
+
+    return professorsList
+
 
 
 def createModuleClasses():
+    print("Hello")
+
+    modules_list = [len (modName)]
+
+    print(len(modName))
+
     for i in range(0, len(modName)):
+        print(f"Mod_name(i): {modName[i]}")
         mod_name = modName[i]
+        print(f"Mod_name: {mod_name}")
         lectureHours = lecHours[i]
         pract_hours = practHours[i]
         tutorialHours = tutHours[i]
         students_enrolled = studentsEnrolled[i]
-        hours_required_for_pract = hoursRequiredForPract [i]
 
         new_module = Module(mod_name, 
                             lectureHours, 
                             pract_hours, 
                             tutorialHours, 
                             students_enrolled, 
-                            hours_required_for_pract)
+                           )
         
         modules_list.append(new_module)
+
+        print(f"createModuleClasses {modules_list}") 
 
 
 def determineAvailableProfessors(
@@ -316,9 +303,12 @@ def displayTimetable():
 
 
 def importFromDatabase(session):
-    fillModuleLists(session)
+
+    module.fillModuleLists(Module, session, modules_list)
+    #fillRoomLists(session)
     fillProfessorsLists(session)
-    fillRoomLists(session)
+
+    return modules_list
 
 def main():
     #declare variables
@@ -328,7 +318,9 @@ def main():
     importFromDatabase(session)
 
     #create class for the module which takes in mod information.
-    createModuleClasses() 
+    modules_list = createModuleClasses() 
+
+    print(f"Modules list: {modules_list}")
 
     for i in range(numOfModules):
         #displayTimetable()
@@ -357,7 +349,8 @@ def main():
         #   timetable again.
         modulesCompleted.append(randMod) 
 
-    displayTimetable()
+    session.dbClose()
 
+    displayTimetable()
 
 main()

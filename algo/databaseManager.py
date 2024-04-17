@@ -207,7 +207,7 @@ class dbManager:
         return
 
     def count_db_entries(self, tbl_name: str, col_name: str):
-
+        
         self.dbCursor.execute(
             sql.SQL("select count({column_name}) from {table}").format(
                 table = sql.Identifier(tbl_name.lower()),
