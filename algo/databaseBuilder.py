@@ -29,14 +29,16 @@ def buildDatabaseSchema(dbCursor: Any) -> None:
             
             CREATE TABLE IF NOT EXISTS lecturer(
                 lecturer_id SERIAL PRIMARY KEY,
+                lecturer_title VARCHAR(4) NOT NULL,
                 lecturer_fname VARCHAR(20) NOT NULL,
-                lecturer_lname VARCHAR(20) NOT NUll,
-                lecturer_availability VARCHAR(100)
+                lecturer_lname VARCHAR(20) NOT NULL,
+                lecturer_modules VARCHAR(200) NOT NULL,
+                lecturer_availability VARCHAR(100) NOT NULL,
             );
 
             CREATE TABLE IF NOT EXISTS building(
                 building_id SERIAL PRIMARY KEY,
-                building_name VARCHAR(20)
+                building_name VARCHAR(50)
             );
 
             CREATE TABLE IF NOT EXISTS room(
@@ -75,16 +77,38 @@ def insertDataToDb(dbCursor: Any):
     None
     """
     dbCursor.execute(
-          """INSERT INTO building (building_name) VALUES
-            ('Angelesea'),
+          """
+            INSERT INTO modules (mod_name, mod_enrolled, mod_lectures, mod_practicals, mod_tutorials)
+            VALUES
+                ('Architecture & Operating Systems', 200, 1, 2, 0),
+                ('Comp Tutorial 4', 200, 0, 0, 1),
+                ('Core Computing Concepts', 200, 1, 1, 0),
+                ('Database Systems Development', 200, 1, 2, 0),
+                ('Networks', 200, 1, 1, 0),
+                ('Programming', 150, 1, 2, 0);
+
+            INSERT INTO building (building_name) VALUES
+            ('Anglesea'),
             ('Liongate'),
             ('Park'),
-            ('Richmond');
+            ('Richmond'),
+            ('Future Technology Centre') ;
+
             
-            INSERT INTO lecturer (lecturer_fname, lecturer_lname, lecturer_availability) VALUES
-            ('Taylor', 'Swift', 'EX001'),
-            ('Adam', 'Levine', 'EX003'),
-            ('Lewis', 'Capaldi', 'EX009'),
-            ('Katy', 'Perry', 'EX001');
-        """)
+            INSERT INTO lecturer (lecturer_title, lecturer_fname, lecturer_lname, lecturer_modules, lecturer_availability) VALUES
+            ('Miss', 'Taylor', 'Swift', 'Architecture & Operating Systems', '000000000000000001000000001000000001000000001'),
+            ('Mr','Adam', 'Levine', 'Networks', '000010010010000100001000001100000000000010000'),
+            ('Mr', 'Lewis', 'Capaldi', 'Programming', '000000000000000000000000000000000000000000000'),
+            ('Miss', 'Katy', 'Perry', 'Programming', '000000000000000000000000000000000000000000000');
+			 
+			INSERT INTO room (room_name, room_capacity, building_id) VALUES
+            ('A2.03', 40, 1),
+            ('FTC_Floor1', 80, 5), 
+            ('FTC_Floor2', 80, 5), 
+            ('FTC_Floor1', 50, 5),
+            ('L0.14a', 67, 2),
+            ('RLT1', 330, 4), 
+            ('RLT2', 160, 4), 
+            ('R1.03', 24, 4) ;
+            """)
     return

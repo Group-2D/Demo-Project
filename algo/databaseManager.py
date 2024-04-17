@@ -21,9 +21,9 @@ class dbManager:
 
         self.dbConnection = psycopg2.connect(
             host = "localhost",
-            dbname = "postgres",
+            dbname = "TimetableDB",
             user = "postgres",
-            password = "Lebihan01!", #change this to your password if testing etc...
+            password = "Jimbobrimbo9", #change this to your password if testing etc...
             port = 5432
         )
 
@@ -125,7 +125,7 @@ class dbManager:
             print(error)
             return False
         
-        return self.dbCursor.fetchall()
+        return self.dbCursor.fetchone()
     
     def getTables(self):
         """
@@ -203,6 +203,18 @@ class dbManager:
             )
     
         self.dbConnection.commit()
+
+        return
+
+    def count_db_entries(self, tbl_name: str, col_name: str):
+
+        self.dbCursor.execute(
+            sql.SQL("select count({column_name}) from {table}").format(
+                table = sql.Identifier(tbl_name.lower()),
+                column_name = sql.Identifier(col_name.lower())
+
+            )
+        )
 
         return
 
