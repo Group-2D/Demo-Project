@@ -8,20 +8,6 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.window import Window
 
-# ensures pip is installed
-subprocess.check_call([sys.executable, 
-                        "-m",
-                        "ensurepip", 
-                        "--upgrade"])
-
-# ensures that all the modules required for the program to run are installed
-subprocess.check_call([sys.executable, 
-                        "-m", 
-                        "pip", 
-                        "install", 
-                        "-r", 
-                        "requirements.txt"])
-
 # Define the TimetableSchedule layout
 class TimetableSchedule(BoxLayout):
     def __init__(self, screen_manager, **kwargs):
