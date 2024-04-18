@@ -357,9 +357,7 @@ def main():
     session = dbManager()
 
     session.count_db_enteries('lecturer', 'lecturer_id')
-    print(session.dbCursor.fetchall())
-
-    session.selectAll('lecturer')
+    session.selectOnCondition(['lecturer_fname', 'lecturer_lname', 'lecturer_id'], 'lecturer', 'lecturer_id', 1)
     print(session.dbCursor.fetchall())
     session.dbClose()
 
