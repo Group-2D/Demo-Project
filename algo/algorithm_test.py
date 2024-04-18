@@ -6,15 +6,13 @@
 # how to make professors unavailable once they have been assigned to a lecture
 # how to end the program if not spaces or availabilities can be found
 
+import copy
 import random
 
 # maximum of 5 days, 9 hour slots, 12 rooms; format days, hour slots, rooms
 timetableEntries = [
     [[None for _ in range(8)] for _ in range(9)] for _ in range(5)]
-professorTimetable = [
-    [[None for _ in range(9)] for _ in range(5)] for _ in range(7)]
 numOfModules = 6
-
 
 modules_list = []
 modName = ["Architecture & Operating Systems", 
@@ -49,7 +47,7 @@ professorsList = [['Dr',
                 ['Dr', 
                  'Lisa',
                  'Franklin', 
-                 'Core Computing Concepts', 
+                 'Core Computing Concepts, Comp Tutorial 4', 
                  '000000000000000000000000000000000000000000000'],
                 ['Dr', 
                  'Herbert',
@@ -81,6 +79,13 @@ professorsList = [['Dr',
 modsCompleted = []
 
 
+newTimetableEntries = []
+dayList = ["MON",
+           "TUE",
+           "WED",
+           "THU",
+           "FRI"]
+
 class Module:
     def __init__(self, 
                  moduleName, 
@@ -88,14 +93,29 @@ class Module:
                  practicalHours, 
                  tutorialHours, 
                  students_enrolled, 
-                 hours_required_for_pract):
+                 hoursRequiredForPract):
         
         self.modName = moduleName
+
         self.lecHours = lectureHours
         self.practHours = practicalHours
         self.tutHours = tutorialHours
         self.studentsEnrolled = students_enrolled
-        self.hoursRequiredForPract = hours_required_for_pract
+        self.hoursRequiredForPract = hoursRequiredForPract
+
+        self.room = ""
+        self.day = ""
+        self.time = 0
+        self.professors = []
+        self.classType = ""
+
+    def __str__(self) -> str:
+        
+        mystring = f"""Module Name: {self.modName}
+On: {self.day} at: {self.time} in room: {self.room}
+Professors: {self.professors}
+"""
+        return mystring
 
 
 class Room:
@@ -118,9 +138,10 @@ class Professor:
         self.modulesTaught = modules
 
 
-
 def createModuleClasses():
     for i in range(0, len(modName)):
+
+        # temp code that pulls module information from temp lists
         mod_name = modName[i]
         lectureHours = lecHours[i]
         pract_hours = practHours[i]
@@ -144,24 +165,54 @@ def determineAvailableProfessors(
     randDay, 
     randHour):
 
-    #makes sure the correct index for professor availability is selected
-    index = (9*randDay) + randHour
+    # #makes sure the correct index for professor availability is selected
+    # index = (9*randDay) + randHour
 
-    for i in range(0, len(professorsList)):
-        if (module_info.modName in professorsList [i][3]) and (
-            professorTimetable [i] [randDay] [randHour] is None) and (
-            professorsList [i][4][index] == '0'):
+    if len(newTimetableEntries) == 0:
+        for i in range(0, len(professorsList)):
+            if (module_info.modName in professorsList [i][3]):
+                availableProfessors.append(
+                    [professorsList[i][0], 
+                    professorsList[i][1], 
+                    professorsList[i][2]])
 
-            availableProfessors.append(
-                [professorsList[i][0], 
-                 professorsList[i][1], 
-                 professorsList[i][2]])
+    else:
+
+        for i in range(0, len(professorsList)):
+            for checkModule in newTimetableEntries:
+                if ([professorsList[i][0], 
+                     professorsList[i][1], 
+                     professorsList[i][2]]) in checkModule.professors and checkModule.day == randDay and checkModule.time == randHour:
+                        pass
+
+                else:
+                    availableProfessors.append(
+                        [professorsList[i][0], 
+                        professorsList[i][1], 
+                        professorsList[i][2]])
+
+    return availableProfessors
+
+
+
+def checkProfessorAvailability(checkTime,
+                               checkDay,
+                               module_info):
+    
+    timeSlotBit = checkTime * dayList.index(checkDay)
+    availableProfessors = []
+
+    for checkProfessor in professorsList:
+        if module_info.modName in checkProfessor[3]:
+            if int((checkProfessor[4])[timeSlotBit]) == 0:
+                availableProfessors.append(checkProfessor[2])
 
     return availableProfessors
 
 
 def checkConstraints(
-    module_info, type, 
+    module_info, 
+    classType, 
     randPotentialRoom, 
     studentsUnassigned, 
     room):
@@ -169,21 +220,22 @@ def checkConstraints(
     # continue generating new practicals until all students have been assigned 
     #   a practical if need be
     while studentsUnassigned > 0: 
-        # 5 days, 9 hour slots
-        randDay = random.randint(0, 4) 
+        randDay = random.choice(dayList)
         randHour = random.randint(0, 8)
-        availableProfessors = []
         randProfessors = []
         chosenProfessors = []
+        # print("C")
 
-        if timetableEntries [randDay] [randHour] [randPotentialRoom] is None:
-            # finds which professors who teach the module can teach at 
-            #   the specific time.
-            availableProfessors = determineAvailableProfessors(
-                module_info, 
-                availableProfessors, 
-                randDay, 
-                randHour)
+        unavailable = False
+
+        for checkModule in newTimetableEntries:
+            if checkModule.day == randDay and checkModule.time == randHour and checkModule.room == randPotentialRoom:
+                unavailable = True
+
+        if unavailable == False: 
+            availableProfessors = checkProfessorAvailability(randHour,
+                                                             randDay,
+                                                             module_info)
 
             if len(availableProfessors) == 0:
                 return False
@@ -194,24 +246,20 @@ def checkConstraints(
                 # this will be used to pick one or more of the professors who 
                 #   are available at this time
                 for i in range(module_info.hoursRequiredForPract):
-                    randProfessors.append(
-                        random.randint(0, len(availableProfessors) - 1))
-                    
-                    chosenProfessors.append(
-                        availableProfessors[randProfessors[i]])
+                    chosenProfessors.append(random.choice(availableProfessors))
+            
+                entryModule = copy.deepcopy(module_info)
 
-                #populate the timetableEntry at the randDay randHour index
-                timetableEntries[randDay][randHour][randPotentialRoom] = (
-                    [module_info.modName, type, chosenProfessors, room])
+                entryModule.day = randDay
+                entryModule.time = randHour
+                entryModule.room = randPotentialRoom
+                entryModule.professors = chosenProfessors
+                entryModule.classType = classType
 
+                newTimetableEntries.append(entryModule)
 
-                # reduce the number of studentUnassigned to reflect the session 
-                #   just generated
                 studentsUnassigned = studentsUnassigned - room [2] 
-                
-        else:
-            return False
-        
+
     return True
     
 
@@ -223,6 +271,7 @@ def insertIntoTimetable(module_info, modType):
 
     while not moduleInserted:
         correctRoomType = False
+        # print(newTimetableEntries)
 
         while not correctRoomType:
             randPotentialRoom = random.randint(0, len(roomsList) - 1)
@@ -234,23 +283,17 @@ def insertIntoTimetable(module_info, modType):
                 correctRoomType = True 
 
         # inserts the requirements of the module into the timetable
-        moduleInserted = checkConstraints(
-        module_info, 
-        modType, 
-        randPotentialRoom, 
-        studentsUnassigned, 
-        room)
+        moduleInserted = checkConstraints(module_info,
+                                          modType, 
+                                          randPotentialRoom, 
+                                          studentsUnassigned, 
+                                          room)
 
 
 def displayTimetable():
-    for i in range(len(timetableEntries)):
-        for j in range(len(timetableEntries[i])):
-            for k in range(len(timetableEntries[i][j])):
-                if timetableEntries [i] [j] [k] is not None:
-                    print(f"Value at ({i}, {j}, {k}): {timetableEntries [i] [j] [k]}")
+    for lesson in newTimetableEntries:
 
-                    #i represents days [0-4], [0] = Monday, [1] = Tuesday, etc
-                    #j represents days [0-4], []
+        print(lesson)
 
 
 def main():
@@ -288,3 +331,5 @@ def main():
         modulesCompleted.append(randMod) 
 
     displayTimetable()
+
+main()
