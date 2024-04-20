@@ -1,5 +1,6 @@
 Technologies
-------------
+=====
+.. _technologies
 
 The Technologies used in the project:
 
