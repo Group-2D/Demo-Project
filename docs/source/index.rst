@@ -34,8 +34,8 @@ Contents
    :maxdepth: 2
 
    installation
-   technologies
    database
+   technologies
    how-to-use-the-project
    credits
 
