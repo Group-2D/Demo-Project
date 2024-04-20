@@ -27,13 +27,12 @@ University Timetable Generator
 
 The project is designed to generate a university timetable.
 
-Table Of Contents
+Contents
 ------------------
 
 .. toctree::
    :maxdepth: 2
 
-   description
    technologies
    installation
    final-setup
