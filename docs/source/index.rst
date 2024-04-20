@@ -64,7 +64,7 @@ This section is used to show the structure of the database and various use cases
 Database ERD
 ~~~~~~~~~~~~~
 
-.. image:: image.png
+.. image:: ERD.png
 
 Generating a Timetable
 ~~~~~~~~~~~~~~~~~~~~~~
