@@ -33,8 +33,8 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   technologies
    installation
+   technologies
    final-setup
    how-to-use-the-project
    credits
