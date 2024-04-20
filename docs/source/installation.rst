@@ -34,7 +34,9 @@
    ['shells', 'gorgonzola', 'parsley']
 
 Installation
-------------
+=====
+.. _installation
+
 
 The project is built in Python using various libraries as listed above and PostgreSQL.
 
