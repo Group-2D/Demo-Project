@@ -36,7 +36,8 @@ Contents
    installation
    database
    technologies
-   how-to-use-the-project
+   usage
+   navigation
    credits
 
 Description
