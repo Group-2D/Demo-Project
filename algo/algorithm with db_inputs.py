@@ -168,32 +168,11 @@ def determineAvailableProfessors(
     #makes sure the correct index for professor availability is selected
     index = (9*randDay) + randHour
 
-    print(type(index))
-    print(index)
-
-    print(f"Professor list length: {len(professorsList)}") 
-
-
     for i in range(len(professorsList)):
-
-        print(f"ModName = {module_info.modName} and profList = {professorsList[i][3]}")
-
-        print(f"Prof index: {professorsList [i][4][index]}")
-        print(f"Index {professorsList [i][4]}")
-        print(type(professorsList [i][4]))
-        print(type(professorsList [i][4][index]))
-        print(len(professorsList[i][4]))
-
-        print(module_info.modName == professorsList[i][3])
-        print(professorTimetable [i] [randDay] [randHour] is None)
-        print(professorsList [i][4][index] == '0')
-
 
         if (module_info.modName in professorsList [i][3]) and (
             professorTimetable [i] [randDay] [randHour] is None) and (
             professorsList [i][4][index] == '0'):
-
-            print(f"ModName = {module_info.modName} and profList = {professorsList[i][3]}")
             
             availableProfessors.append(
                 [professorsList[i][0], 
@@ -215,8 +194,6 @@ def checkConstraints(
     # continue generating new practicals until all students have been assigned 
     #   a practical if need be
 
-    #print("StudentUnassigned: ", studentsUnassigned)
-
     while studentsUnassigned > 0: 
         # 5 days, 9 hour slots
         randDay = random.randint(0, 4) 
@@ -228,7 +205,6 @@ def checkConstraints(
         if timetableEntries [randDay] [randHour] [randPotentialRoom] is None:
             # finds which professors who teach the module can teach at 
             #   the specific time.
-            print("timetable")
 
             availableProfessors = determineAvailableProfessors(
                 module_info, 
@@ -321,14 +297,7 @@ def main():
 
     professorTimetable = [[[None for _ in range(9)] for _ in range(5)] for _ in range(profLength)]
 
-    #create class for the module which takes in mod information.
-    #createModuleClasses() 
-
-    print(f"Rooms list: {rooms_list}")
-
     for i in range(numOfModules):
-        #displayTimetable()
-
         moduleInserted = False 
 
         while moduleInserted == False:
