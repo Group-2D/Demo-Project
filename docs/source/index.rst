@@ -35,7 +35,6 @@ Table Of Contents
 
    description
    technologies
-   :doc`installation`
    final-setup
    how-to-use-the-project
    credits
