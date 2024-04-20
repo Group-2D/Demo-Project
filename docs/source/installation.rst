@@ -94,7 +94,7 @@ Download Steps:
 4. The setup should now be complete.
 
 Final setup
------------
+~~~~~~~~~~~
 
 Once all the dependencies have been downloaded and successfully installed, you will need to complete some further steps before the project can run.
 
