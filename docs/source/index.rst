@@ -35,6 +35,7 @@ Table Of Contents
 
    description
    technologies
+   installation
    final-setup
    how-to-use-the-project
    credits
