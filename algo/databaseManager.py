@@ -175,12 +175,13 @@ class dbManager:
         """
         tbl_cols: set[str] = set()
         self.dbCursor.execute(
-            sql.SQL("select * from infomation_schema.columns where table_schema = 'table_schema' and table_name = {table}").format(
+            sql.SQL("select * from information_schema.columns where table_schema = 'table_schema' and table_name = {table}").format(
                 table = sql.Identifier(tbl_name.lower())
             )
         )
         
         for col in self.dbCursor.fetchall():
+            print(col)
             tbl_cols.add(col[0])
         return tbl_cols
 
@@ -352,6 +353,8 @@ class dbManager:
 def main():
 
     session = dbManager()
+
+    session.getColumns('lecturer')
 
     session.dbClose()
 
