@@ -59,22 +59,28 @@ class dbManager:
         -------
         None
         """
+        if len(self.tblSet) == 0:
+            self.setTblSet()
 
         if type(table) != str:
             print(TypeError)
             return False
-
-        try:
-            self.dbCursor.execute(
-                """SELECT * FROM %s """ % table.lower()
-            )
         
-        except psycopg2.ProgrammingError as error:
-            print(error)
-            return False
+        if table in self.tblSet:
+            try:
+                self.dbCursor.execute(
+                    """SELECT * FROM %s """ % table.lower()
+                )
+            
+                return 
+            
+            except psycopg2.ProgrammingError as error:
+                print(error)
+                return False
     
         else:
-            return 
+            print("table does not exsist in the database")
+            return False 
         
     
     def selectOnCondition(self, tbl_fields: list[str], tbl_name: str, target: str, value: Any):
@@ -97,35 +103,57 @@ class dbManager:
         All values that match the statement and returns a list of tuples
             
         """
+<<<<<<< Updated upstream
+=======
+        
+        if len(self.tblSet) == 0:
+            self.setTblSet()
+
+>>>>>>> Stashed changes
         if type(tbl_name) != str:
             print(TypeError)
             return False
         
-        for field in tbl_fields:
-            if type(field) != str:
-                print(field, "is wrong Type", TypeError)
-                return False
+        if tbl_name in self.tblSet:
+
+            tbl_columns = self.getColumns(tbl_name)
+            print(tbl_columns)
+            for field in tbl_fields:
+                if type(field) != str:
+                    print(field, "is wrong Type", TypeError)
+                    return False
             
-        if type(target) != str:
-            print(TypeError)
-            return False
+                if field not in tbl_columns:
+                    print(field, "does not exist in the table")
+                    return False
+                
+            if type(target) != str:
+                print(TypeError)
+                return False
         
-        try:    
-            self.dbCursor.execute(
-                sql.SQL("select {fields} from {table} where {condition} = %s").format(
-                    fields = sql.SQL(',').join(
-                        sql.Identifier(n.lower()) for n in tbl_fields
-                    ),
-                    table = sql.Identifier(tbl_name.lower()),
-                    condition = sql.Identifier(target.lower())),
-                    [value]
-                )
         
-        except psycopg2.ProgrammingError and psycopg2.OperationalError as error:
-            print(error)
-            return False
+            try:    
+                self.dbCursor.execute(
+                    sql.SQL("select {fields} from {table} where {condition} = %s").format(
+                        fields = sql.SQL(',').join(
+                            sql.Identifier(n.lower()) for n in tbl_fields
+                        ),
+                        table = sql.Identifier(tbl_name.lower()),
+                        condition = sql.Identifier(target.lower())),
+                        [value]
+                    )
+                
+                return self.dbCursor.fetchall()
+            
+            except psycopg2.ProgrammingError and psycopg2.OperationalError and psycopg2.errors.SyntaxError as error:
+                print(error)
+                return False
         
+<<<<<<< Updated upstream
         return self.dbCursor.fetchone()
+=======
+        return False
+>>>>>>> Stashed changes
     
     def getTables(self):
         """
@@ -142,7 +170,53 @@ class dbManager:
 
         return self.dbCursor.fetchall()
 
+<<<<<<< Updated upstream
     def insertIntoDb(self, tbl_name: str, tbl_cols: list[str], values: Any) -> None:
+=======
+    def getColumns(self, tbl_name: str):
+        """
+        _summary_
+
+        Parameters
+        ----------
+        tbl_name : string 
+            _description_
+        """
+        tbl_cols: list[str] = list()
+        self.dbCursor.execute(
+            sql.SQL("select column_name from information_schema.columns where table_name = %s"),
+            [tbl_name]
+        )
+        
+        for column in self.dbCursor.fetchall():
+            tbl_cols.append(column[0])
+
+        return tbl_cols
+
+    def count_db_enteries(self, tbl_name: str, col_name: str):
+        """
+        returns the number of enteries in a database table
+
+        Parameters
+        ----------
+        tbl_name : str
+            the table being quirried 
+        col_name : str
+            the column being counted
+        """
+        self.dbCursor.execute(
+            sql.SQL("select count({column_name}) from {table}").format(
+                table = sql.Identifier(tbl_name.lower()),
+                column_name = sql.Identifier(col_name.lower())
+
+            )
+        )
+
+        return
+        
+    
+    def insertIntoDb(self, tbl_name: str, tbl_cols: list[str], values: Any):
+>>>>>>> Stashed changes
         #! this function needs to check for duplicate inputs
         """
         Inserts values into the database to a given table
@@ -272,12 +346,15 @@ def main():
 
     session = dbManager()
 
+<<<<<<< Updated upstream
     session.getTables()
 
     print(session.dbCursor.fetchall())
 
     session.dbClose()
 
+=======
+>>>>>>> Stashed changes
 
 if __name__ == '__main__':
     main()
