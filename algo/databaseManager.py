@@ -175,7 +175,7 @@ class dbManager:
         """
         tbl_cols: set[str] = set()
         self.dbCursor.execute(
-            sql.SQL("select * from information_schema.columns where table_schema = 'table_schema' and table_name = {table}").format(
+            sql.SQL("select column_name from information_schema.columns where table_name = {table}").format(
                 table = sql.Identifier(tbl_name.lower())
             )
         )
