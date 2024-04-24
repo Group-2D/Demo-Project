@@ -14,20 +14,18 @@ class dbManager:
     lineNo (Int) : holds the line number in a given file
     
     """
-
     def __init__(self) -> None:
 
         self.dbConnection = psycopg2.connect(
             host = "localhost",
-            dbname = "timetable_gen",
+            dbname = "TimetableDB",
             user = "postgres",
-            password = "Lebihan01!", #change this to your password if testing etc...
+            password = "Jimbobrimbo9", #change this to your password if testing etc...
             port = 5432
         )
 
         self.dbCursor = self.dbConnection.cursor()
-        #? add a list of tables stored in the database?
-        self.tblSet: set[str] = set()
+
         self.lineNo = 0
 
 
@@ -46,30 +44,6 @@ class dbManager:
         self.dbCursor.close()
         self.dbConnection.close()
     
-    def setTblSet(self):
-        """
-        creates a set of all tables in the database for easier searching
-
-        Returns
-        -------
-        self.tblSet
-            a set of all tables stored in the database
-        """
-        self.dbCursor.execute(
-            sql.SQL("select tablename from pg_catalog.pg_tables where schemaname != 'information_schema' and schemaname != 'pg_catalog'")
-        ) 
-
-        if self.tblSet:
-            return self.tblSet
-        else:
-            tblSet: set[str] = set()
-
-            for table in self.dbCursor.fetchall():
-                tblSet.add(table[0])
-
-            self.tblSet = tblSet
-            return self.tblSet
-        
     def selectAll(self, table: str) -> Any:
         """
         Gets all the data from a given table
@@ -106,7 +80,7 @@ class dbManager:
 
         Parameters
         ----------
-        tbl_feilds : List[str]
+        tbl_fields : List[str]
             The selected fields from a table
         tbl_name : str
             The selected table 
@@ -120,7 +94,7 @@ class dbManager:
         All values that match the statement and returns a list of tuples
             
         """
-        if type(tbl_name) != str and tbl_name not in self.tblSet:
+        if type(tbl_name) != str:
             print(TypeError)
             return False
         
@@ -148,7 +122,7 @@ class dbManager:
             print(error)
             return False
         
-        return
+        return self.dbCursor.fetchone()
     
     def getTables(self):
         """
@@ -162,6 +136,7 @@ class dbManager:
         self.dbCursor.execute(
             sql.SQL("select tablename from pg_catalog.pg_tables where schemaname != 'information_schema' and schemaname != 'pg_catalog'")
         ) 
+
         return self.dbCursor.fetchall()
 
     def getColumns(self, tbl_name: str):
@@ -225,31 +200,17 @@ class dbManager:
         -------
         None
         """
-        if type(tbl_name) != str and tbl_name not in self.tblSet:
-            print(TypeError)
-            return False
-        
-        for tbl in tbl_cols:
-            if type(tbl) != str:
-                return False
-        
-        try:
-            self.dbCursor.execute(
-                sql.SQL("insert into {table} ({columns}) values %s").format(
-                    table = sql.Identifier(tbl_name.lower()),
-                    columns = sql.SQL(',').join(
-                        sql.Identifier(n.lower()) for n in tbl_cols
-                    )),
-                    [values]
-                    
-            )
-            self.dbConnection.commit()
+        self.dbCursor.execute(
+            sql.SQL("insert into {table} ({columns}) values %s").format(
+                table = sql.Identifier(tbl_name),
+                columns = sql.SQL(',').join(
+                    sql.Identifier(n) for n in tbl_cols
+                )),
+                [values]
+                
+        )
 
-        except psycopg2.ProgrammingError and psycopg2.OperationalError as error:
-            print(error)
-            return False
-    
-        return
+        self.dbConnection.commit()
         # ? do we need to keep this ^ the above works for multiple columns with different data types to be inserted
         # self.dbCursor.execute(
         #     sql.SQL("insert into {table} ({column}) values (%s)").format(
@@ -261,7 +222,7 @@ class dbManager:
 
         return 
     
-    def removeDataEqual(self, tbl_name: str, tbl_column: str, value: Any):
+    def removeDataEqual(self, tbl_name: str, tbl_column: str, value: Any) -> None:
         """
         removes data from a given table
 
@@ -274,14 +235,6 @@ class dbManager:
         value : Any
             the value being removed
         """
-        if type(tbl_name) != str and tbl_name not in self.tblSet:
-            print(TypeError, "check the table is in the database")
-            return False
-    
-        if type(tbl_column) != str:
-            print(TypeError, "check the column is in ")
-            return False
-
         self.dbCursor.execute(
             sql.SQL("DELETE FROM {table} WHERE {column} = %s").format(
                 table = sql.Identifier(tbl_name),
@@ -293,7 +246,19 @@ class dbManager:
 
         return
 
-    def removeTable(self, tbl_name: str):
+    def count_db_entries(self, tbl_name: str, col_name: str):
+        
+        self.dbCursor.execute(
+            sql.SQL("select count({column_name}) from {table}").format(
+                table = sql.Identifier(tbl_name.lower()),
+                column_name = sql.Identifier(col_name.lower())
+
+            )
+        )
+
+        return
+
+    def removeTable(self, tbl_name: str) -> None:
         """
         removes a given table and all referenced tables from the database
 
@@ -302,20 +267,10 @@ class dbManager:
         tble_name : str
             name of the table being dropped
         """
-        if type(tbl_name) != str and tbl_name not in self.tblSet:
-            return False
-        try:
-            self.dbCursor.execute(
-                """DROP TABLE IF EXISTS %s CASCADE;""" % tbl_name
-            )
-            self.dbConnection.commit()
-
-            self.tblSet.remove(tbl_name)
-
-        except psycopg2.ProgrammingError and psycopg2.OperationalError as error:
-            print(error)
-            return False
-
+        self.dbCursor.execute(
+            """DROP TABLE IF EXISTS %s CASCADE;""" % tbl_name
+        )
+        self.dbConnection.commit()
         return 
     
 
@@ -349,12 +304,17 @@ class dbManager:
             self.dbConnection.commit()
             
         return 
+    
+
+
 
 def main():
 
     session = dbManager()
 
-    session.getColumns('lecturer')
+    session.getTables()
+
+    print(session.dbCursor.fetchall())
 
     session.dbClose()
 

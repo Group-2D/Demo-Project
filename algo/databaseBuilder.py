@@ -113,7 +113,7 @@ def insertDataToDb(dbCursor: Any):
             ('A2.03', 40, 1),
             ('FTC_Floor1', 80, 5), 
             ('FTC_Floor2', 80, 5), 
-            ('FTC_Floor1', 50, 5),
+            ('FTC_Floor3', 50, 5),
             ('L0.14a', 67, 2),
             ('RLT1', 330, 4), 
             ('RLT2', 160, 4), 
