@@ -2,9 +2,6 @@ import psycopg2
 from psycopg2 import sql
 from typing import Any
 
-from databaseBuilder import buildDatabaseSchema, insertDataToDb
-
-
 class dbManager:
     """
     Class is used to mangage inputs and outputs from the database
@@ -114,10 +111,10 @@ class dbManager:
             self.dbCursor.execute(
                 sql.SQL("select {fields} from {table} where {condition} = %s").format(
                     fields = sql.SQL(',').join(
-                        sql.Identifier(n.lower()) for n in tbl_fields
+                        sql.Identifier(n) for n in tbl_fields
                     ),
-                    table = sql.Identifier(tbl_name.lower()),
-                    condition = sql.Identifier(target.lower())),
+                    table = sql.Identifier(tbl_name),
+                    condition = sql.Identifier(target)),
                     [value]
                 )
         
@@ -142,7 +139,50 @@ class dbManager:
 
         return self.dbCursor.fetchall()
 
-    def insertIntoDb(self, tbl_name: str, tbl_cols: list[str], values: Any) -> None:
+    def getColumns(self, tbl_name: str):
+        """
+        _summary_
+
+        Parameters
+        ----------
+        tbl_name : _type_
+            _description_
+        """
+        tbl_cols: set[str] = set()
+        self.dbCursor.execute(
+            sql.SQL("select column_name from information_schema.columns where table_name = {table}").format(
+                table = sql.Identifier(tbl_name.lower())
+            )
+        )
+        
+        for col in self.dbCursor.fetchall():
+            print(col)
+            tbl_cols.add(col[0])
+        return tbl_cols
+
+    def count_db_enteries(self, tbl_name: str, col_name: str):
+        """
+        returns the number of enteries in a database table
+
+        Parameters
+        ----------
+        tbl_name : str
+            the table being quirried 
+        col_name : str
+            the column being counted
+        """
+        self.dbCursor.execute(
+            sql.SQL("select count({column_name}) from {table}").format(
+                table = sql.Identifier(tbl_name.lower()),
+                column_name = sql.Identifier(col_name.lower())
+
+            )
+        )
+
+        return
+        
+    
+    def insertIntoDb(self, tbl_name: str, tbl_cols: list[str], values: Any):
         #! this function needs to check for duplicate inputs
         """
         Inserts values into the database to a given table
