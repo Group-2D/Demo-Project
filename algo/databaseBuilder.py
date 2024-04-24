@@ -54,8 +54,8 @@ def buildDatabaseSchema(dbCursor: Any) -> None:
                 mod_id INT NOT NULL REFERENCES modules(mod_id),
                 room_id INT NOT NULL REFERENCES room(room_id),
                 lecturer_id INT NOT NULL REFERENCES lecturer(lecturer_id),
-                lecturer_start DECIMAL, 
-                lecturer_end DECIMAL
+                lecturer_start VARCHAR(10), 
+                lecturer_end VARCHAR(10)
             );
             """
         )
