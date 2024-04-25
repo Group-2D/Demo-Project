@@ -1,12 +1,5 @@
-#  TEMP RULES:
-#  All practs for a module will be in the same room.
-
-# how do we associate a professor with a lecture and multiple with the 
-#   practicals?
-# how to make professors unavailable once they have been assigned to a lecture
-# how to end the program if not spaces or availabilities can be found
-
 import copy
+import time
 import random
 from databaseManager import * 
 
@@ -14,7 +7,6 @@ from databaseManager import *
 timetableEntries = [
     [[None for _ in range(8)] for _ in range(9)] for _ in range(5)]
 professorTimetable = []
-numOfModules = 6
 
 modules_list = []
 
@@ -118,7 +110,6 @@ def fillModuleLists(session, modules_list):
     # finds the number of entries in the module list table                                                           
     session.count_db_entries("modules", "mod_id")
     length = session.dbCursor.fetchone()[0]
-    #print(f"Module: {length}") 
 
     for i in range(0, length):
         modName.append(str(session.selectOnCondition(["mod_name"], "modules", "mod_id", i+1))[2:-3])
@@ -165,59 +156,21 @@ def fillProfessorsLists(session, professorsList):
         professorsList [i] [3] = str(session.selectOnCondition(["lecturer_modules"], 'lecturer', 'lecturer_id', i + 1))[2:-3]
         professorsList[i] [4] = str(session.selectOnCondition(["lecturer_availability"], 'lecturer', 'lecturer_id', i + 1))[2:-3]
 
-    return professorsList, length
+    return professorsList
 
 
 
-def importFromDatabase(session, modules_list, rooms_list, professors_list, profLength):
+def importFromDatabase(session, modules_list, rooms_list, professors_list):
     modules_list = fillModuleLists(session, modules_list)
     rooms_list = fillRoomLists(session, rooms_list)
-    professors_list, profLength = fillProfessorsLists(session, professors_list)
+    professors_list = fillProfessorsLists(session, professors_list)
 
-    return modules_list, rooms_list, professors_list, profLength
+    return modules_list, rooms_list, professors_list
 
 
 ################################################################################################################################################################
 #                    ALGORITHM
 ################################################################################################################################################################
-
-def determineAvailableProfessors(
-    module_info, 
-    availableProfessors, 
-    randDay, 
-    randHour,
-    professorsList):
-
-    # #makes sure the correct index for professor availability is selected
-    # index = (9*randDay) + randHour
-
-    if len(newTimetableEntries) == 0:
-        for i in range(0, len(professorsList)):
-            if (module_info.modName in professorsList [i][3]):
-                availableProfessors.append(
-                    [professorsList[i][0], 
-                    professorsList[i][1], 
-                    professorsList[i][2]])
-
-    else:
-
-        for i in range(0, len(professorsList)):
-            for checkModule in newTimetableEntries:
-                if ([professorsList[i][0], 
-                     professorsList[i][1], 
-                     professorsList[i][2]]) in checkModule.professors and checkModule.day == randDay and checkModule.time == randHour:
-                        pass
-
-                else:
-                    availableProfessors.append(
-                        [professorsList[i][0], 
-                        professorsList[i][1], 
-                        professorsList[i][2]])
-
-    return availableProfessors
-
-
-
 def checkProfessorAvailability(checkTime,
                                checkDay,
                                module_info,
@@ -299,25 +252,24 @@ def checkConstraints(
 
                 newTimetableEntries.append(entryModule)
 
+                print("Hello: ", newTimetableEntries[0])
+
                 studentsUnassigned = studentsUnassigned - room [1] 
 
-                # print("Name:", module_info.modName)
-                # print("Day:", entryModule.day)
-                # print("Time:", entryModule.time)
-                # print("Room:", entryModule.room)
-                # print("Professors:", entryModule.professors)
-                # print("Class Type:", entryModule.classType)
-                # print("Students Unassigned:", studentsUnassigned)
-
-    #print("break true")
     return True
     
 
 
-def insertIntoTimetable(module_info, classType, roomsList, professorsList, professorTimetable):
+def insertIntoTimetable(module_info, classType, roomsList, professorsList):
     room = ""
     studentsUnassigned = module_info.studentsEnrolled
     moduleInserted = False
+
+    #test checking
+    valid_classTypes = ['lec', 'pract', 'tut']  # Define valid classType values
+    if classType not in valid_classTypes:
+        raise ValueError("Invalid classType. Supported classTypes are 'lec', 'pract', and 'tut'.")
+
 
     while not moduleInserted:
         correctRoomType = False
@@ -347,8 +299,23 @@ def insertIntoTimetable(module_info, classType, roomsList, professorsList, profe
 
 def displayTimetable():
     for lesson in newTimetableEntries:
+        print(lesson.day)
 
         print(lesson)
+
+
+def insertIntoDatabase(session):
+    for i in newTimetableEntries:
+        timetableEntry = newTimetableEntries[0]  # Index 4 corresponds to the fifth entry
+        day = timetableEntry.day
+        time = timetableEntry.time
+        room = timetableEntry.room
+        professors = timetableEntry.professors
+        classType = timetableEntry.classType
+
+        session.insertIntoDb("lecture", 
+                            ["lecture_id", "mod_id", "room_id", "lecturer_id", "lecturer_start", "lecturer_end"], 
+                             f"({day}, {time}, {room}, {professors}, {classType})")
 
 
 def main():
@@ -359,17 +326,12 @@ def main():
     modules_list = []
     rooms_list = []
     professors_list = []
-    profLength = 0
 
     ## read values in from the database to fill lists
-    modules_list, rooms_list, professors_list, profLength = importFromDatabase(session, 
-                                                                                modules_list, 
-                                                                                rooms_list,
-                                                                                professors_list,
-                                                                                profLength)
-    
-    ## determines the length of the professor's timetable
-    #professorTimetable = [[[None for _ in range(9)] for _ in range(5)] for _ in range(profLength)]
+    modules_list, rooms_list, professors_list = importFromDatabase(session, 
+                                                                   modules_list, 
+                                                                   rooms_list,
+                                                                   professors_list,)
 
     for i in range(len(modules_list)):
         moduleInserted = False 
@@ -380,15 +342,15 @@ def main():
             if randMod not in modulesCompleted:
                 if modules_list[randMod].lecHours > 0:
                     for i in range(lecHours [randMod]):
-                        insertIntoTimetable(modules_list[randMod], 'lec', rooms_list, professors_list, professorTimetable)
+                        insertIntoTimetable(modules_list[randMod], 'lec', rooms_list, professors_list)
 
                 if modules_list[randMod].practHours > 0:
                     for i in range(practHours [randMod]):
-                        insertIntoTimetable(modules_list[randMod], 'pract', rooms_list, professors_list, professorTimetable)
+                        insertIntoTimetable(modules_list[randMod], 'pract', rooms_list, professors_list)
 
                 if modules_list[randMod].tutHours > 0:
                     for i in range(tutHours [randMod]):
-                        insertIntoTimetable(modules_list[randMod], 'tut', rooms_list, professors_list, professorTimetable)
+                        insertIntoTimetable(modules_list[randMod], 'tut', rooms_list, professors_list)
 
                 moduleInserted = True
             
@@ -401,4 +363,7 @@ def main():
 
     displayTimetable()
 
-main()
+    #insertIntoDatabase(session)
+
+if __name__ == '__main__':
+    main()
