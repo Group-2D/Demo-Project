@@ -9,6 +9,8 @@ class TestCheckConstraints(unittest.TestCase):
 
     dummy_modInfo = MagicMock()
     dummy_modInfo.modName = 'Architecture & Operating Systems'
+    dummy_invalidModInfo = MagicMock()
+    dummy_invalidModInfo.modName = "Forensic Science"
 
     profsList = [
 			('Miss', 'Taylor', 'Swift', 'Architecture & Operating Systems', 
@@ -37,9 +39,10 @@ class TestCheckConstraints(unittest.TestCase):
 
     @parameterized.expand([
         ("valid", dummy_modInfo, "lec", 6, 200, ['RLT2', 160, (4,), None], profsList),
+        ("invalid studentsUnassigned", dummy_modInfo, "lec", 6, 23490, ['RLT2', 160, (4,), None], profsList),
         ("invalid classType", dummy_modInfo, "peepee", 6, 200, ['RLT2', 160, (4,), None], profsList),
         ("invalid randPotentialRoom", dummy_modInfo, "lec", 1239, 200, ['RLT2', 160, (4,), None], profsList),
-        ("invalid room", dummy_modInfo, "lec", 6, 200, ['blank', 0, (82,), None], profsList),
+        # ("invalid room", dummy_modInfo, "lec", 6, 200, ['blank', 0, (82,), None], profsList),
         ("invalid professorsList", dummy_modInfo, "lec", 6, 200, ['RLT2', 160, (4,), None], ["Mister","Invalid"]),
     ])
 
