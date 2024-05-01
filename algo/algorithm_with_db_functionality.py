@@ -56,7 +56,7 @@ class Module:
     def __str__(self) -> str:
         
         mystring = f"""Module Name: {self.modName}
-On: {self.day} at: {self.time} in room: {self.room}
+On: {self.day} at: {self.time} in room: {self.room[0]}
 Professors: {self.professors}, 
 Type: {self.classType}
 """
@@ -204,7 +204,6 @@ def checkConstraints(
     #   a practical if need be
     while studentsUnassigned > 0:
         if len(unavailable_combinations) >= total_combinations:
-            print("No available times for this room.")
             return False
 
         randDay = random.choice(dayList)
