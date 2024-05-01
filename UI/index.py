@@ -103,7 +103,14 @@ class main:
         Select all
         DROPDOWN FOR TABLE NAMES
         """
-        pass
+        get_data = tkinter.Toplevel(self.main_window)
+        get_data.title("Get Data")
+        get_data.geometry("650x450")
+        get_data.resizable(False, False)
+        get_data.attributes("-topmost", True)
+
+        title = customtkinter.CTkLabel(get_data, text="Get Data", font=("Calibre", 20), corner_radius=10)
+        title.place(relx=0.5, rely=0.1, anchor=tkinter.CENTER)
 
     def generate_timetable_window(self):
         pass
