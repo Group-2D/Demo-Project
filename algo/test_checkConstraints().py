@@ -11,6 +11,7 @@ class TestCheckConstraints(unittest.TestCase):
     dummy_modInfo.modName = 'Architecture & Operating Systems'
     dummy_invalidModInfo = MagicMock()
     dummy_invalidModInfo.modName = 'Forensic Science'
+    dummy_object = MagicMock()
 
     profsList = [
 			('Miss', 'Taylor', 'Swift', 'Architecture & Operating Systems', 
@@ -40,18 +41,40 @@ class TestCheckConstraints(unittest.TestCase):
     @parameterized.expand([
         ("valid", 
          dummy_modInfo, "lec", 6, 200, ['RLT2', 160, (4,), None], profsList),
-        ("invalid modInfo", 
+
+        ("invalid modInfo (incorrect modname)", 
          dummy_invalidModInfo, "lec", 6, 200, ['RLT2', 160, (4,), None], profsList),
-        ("invalid studentsUnassigned", 
+
+        ("invalid modInfo (invalid object passed)", 
+         dummy_object, "lec", 6, 200, ['RLT2', 160, (4,), None], profsList),
+
+        ("invalid studentsUnassigned (out of bounds)", 
          dummy_modInfo, "lec", 6, 23490, ['RLT2', 160, (4,), None], profsList),
-        ("invalid classType", 
+
+        ("invalid studentsUnassigned (out of bounds)", 
+         dummy_modInfo, "lec", 6, None, ['RLT2', 160, (4,), None], profsList),
+
+        ("invalid classType (out of bounds)", 
         dummy_modInfo, "peepee", 6, 200, ['RLT2', 160, (4,), None], profsList),
-        ("invalid randPotentialRoom", 
+
+        ("invalid classType (data type)", 
+        dummy_modInfo, "peepee", 6, 200, ['RLT2', 160, (4,), None], profsList),
+
+        ("invalid randPotentialRoom (out of bounds)", 
         dummy_modInfo, "lec", 1239, 200, ['RLT2', 160, (4,), None], profsList),
-        ("invalid room", 
+
+        ("invalid randPotentialRoom (invalid null type)", 
+        dummy_modInfo, "lec", None, 200, ['RLT2', 160, (4,), None], profsList),
+
+        ("invalid room (invalid room name, doesnt exist)", 
         dummy_modInfo, "lec", 6, 200, ['blank', 0, (82,), None], profsList),
-        ("invalid professorsList", 
+
+        ("invalid room (invalid data type null)", 
+        dummy_modInfo, "lec", 6, 200, None, profsList),
+
+        ("invalid professorsList (out of bounds)", 
         dummy_modInfo, "lec", 6, 200, ['RLT2', 160, (4,), None], ["Mister","Invalid"]),
+
     ])
 
     def test_valid(self, name, modInfo, ctype, randroom, studs, room, profs):
