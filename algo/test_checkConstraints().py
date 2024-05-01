@@ -4,7 +4,6 @@ from parameterized import parameterized
 
 from algorithm_with_db_functionality import checkConstraints
 
-
 class TestCheckConstraints(unittest.TestCase):
 
     dummy_modInfo = MagicMock()
