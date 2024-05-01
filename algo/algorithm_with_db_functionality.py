@@ -220,10 +220,10 @@ def checkConstraints(
         unavailable = False
 
         for checkModule in newTimetableEntries:
-            if checkModule.day == randDay and checkModule.time == randHour and checkModule.room == randPotentialRoom:
+            if checkModule.day == randDay and checkModule.time == randHour and checkModule.room == room:
                 unavailable = True
                 ## add to a list of day hour combinations that cannot be used 
-                unavailable_combinations.append(randDay, randHour) 
+                unavailable_combinations.append(dayHourComb)
 
         if unavailable == False: 
             availableProfessors = checkProfessorAvailability(randHour,
@@ -246,13 +246,11 @@ def checkConstraints(
 
                 entryModule.day = randDay
                 entryModule.time = randHour
-                entryModule.room = room [0]
+                entryModule.room = room
                 entryModule.professors = chosenProfessors
                 entryModule.classType = classType
 
                 newTimetableEntries.append(entryModule)
-
-                print("Hello: ", newTimetableEntries[0])
 
                 studentsUnassigned = studentsUnassigned - room [1] 
 
