@@ -5,8 +5,7 @@ import os
 os.environ['KIVY_GL_BACKEND'] = 'angle_sdl2'
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
-#from lecture import Module_page  # Import the Module_page class from your file
-from login_second import LoginScreen
+
 from loginpage_new import LoginScreen_new
 from homepage_new import HomePage
 from generate_timetable_page import MainMenuScreen
@@ -16,8 +15,6 @@ from lecturer import Lecturer
 from module import Module_page
 from room import Room
 from lecture import Lecture
-#from algo import ModifyDataFile
-from kivy.core.window import Window
 
 
 class MyApp(App):

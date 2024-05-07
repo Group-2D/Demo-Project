@@ -52,7 +52,7 @@ class LoginScreen_new(Screen):
          shaUserkey.update(userkey.encode('utf-8'))
          encryptedUserkey = shaUserkey.hexdigest()
          print("login successful")
-         self.change_to_timetable(instance)
+         self.change_to_main()
 
         except Exception as e:
             print(f"Error occurred while changing to login screen: {e}")
@@ -62,7 +62,7 @@ class LoginScreen_new(Screen):
 
 
 
-    def change_to_timetable(self, instance):
+    def change_to_main(self):
         try:
            self.manager.current = 'main_menu'
         except Exception as e:

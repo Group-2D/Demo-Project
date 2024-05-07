@@ -7,6 +7,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.window import Window
 
+from algorithm_with_db_functionality import main as generate
 
 # Define the TimetableSchedule layout
 # class TimetableSchedule(Screen):
@@ -76,6 +77,7 @@ class MainMenuScreen(Screen):
         self.add_widget(main_layout)
 
     def view_timetable(self, instance):
+        generate()
         self.manager.current = 'view_timetable'
 
     def change_to_page_b(self, instance):
