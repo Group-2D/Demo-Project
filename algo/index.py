@@ -1,6 +1,8 @@
 import tkinter
 import customtkinter
 from tkinter import filedialog
+from databaseManager import *
+import algorithm_with_db_functionality as timetable
 
 class main:
 
@@ -16,26 +18,35 @@ class main:
         self.setup_main_window()
 
     def setup_main_window(self):
-
         # Creates the Overall Title        
         overall_title = customtkinter.CTkLabel(master=self.main_window, text="Timetable Generator", font=("Calibre", 25), corner_radius=10)
         overall_title.place(relx=0.5, rely=0.1, anchor=tkinter.CENTER)
 
-        # Creates buttons
-        insert_file_button = customtkinter.CTkButton(master=self.main_window, text="INSERT FILE", font=("Calibre", 20), corner_radius=10, fg_color="black", command=self.insert_file_window)
+        # Set a fixed width and height for buttons
+        button_width = 250
+        button_height = 50
+
+        # Creates buttons with fixed size
+        insert_file_button = customtkinter.CTkButton(master=self.main_window, text="INSERT FILE", font=("Calibre", 20), corner_radius=10, fg_color="black", command=self.insert_file_window, width=button_width, height=button_height)
         insert_file_button.place(relx=0.25, rely=0.25, anchor=tkinter.CENTER)
 
-        alter_data_button = customtkinter.CTkButton(master=self.main_window, text="ADD/DELETE DATA", font=("Calibre", 20), corner_radius=10, fg_color="black", command=self.alter_data_window)
-        alter_data_button.place(relx=0.25, rely=0.5, anchor = tkinter.CENTER)
+        alter_data_button = customtkinter.CTkButton(master=self.main_window, text="ADD/DELETE DATA", font=("Calibre", 20), corner_radius=10, fg_color="black", command=self.alter_data_window, width=button_width, height=button_height)
+        alter_data_button.place(relx=0.25, rely=0.5, anchor=tkinter.CENTER)
 
-        get_data_button = customtkinter.CTkButton(master=self.main_window, text="GET DATA", font=("Calibre", 20), corner_radius=10, fg_color="black")
+        get_data_button = customtkinter.CTkButton(master=self.main_window, text="GET DATA", font=("Calibre", 20), corner_radius=10, fg_color="black", command=self.get_data_window, width=button_width, height=button_height)
         get_data_button.place(relx=0.75, rely=0.25, anchor=tkinter.CENTER)
 
-        generate_timetable_button = customtkinter.CTkButton(master=self.main_window, text="GENERATE TIMETABLE", font=("Calibre", 20), corner_radius=10, fg_color="black")
+        generate_timetable_button = customtkinter.CTkButton(master=self.main_window, text="GENERATE TIMETABLE", font=("Calibre", 20), corner_radius=10, fg_color="black", command=self.generate_timetable_window, width=button_width, height=button_height)
         generate_timetable_button.place(relx=0.75, rely=0.5, anchor=tkinter.CENTER)
+
+        quit_button = customtkinter.CTkButton(self.main_window, text="QUIT", font=("Calibre", 20), corner_radius=10, fg_color="black", command=self.quit_button_command, width=button_width, height=button_height)
+        quit_button.place(relx=0.5, rely=0.75, anchor=tkinter.CENTER)
 
         # Runs the main window
         self.main_window.mainloop()
+
+    def quit_button_command(self):
+        self.main_window.destroy()
 
     def insert_file_window(self):
         
@@ -95,8 +106,14 @@ class main:
         add_button = customtkinter.CTkButton(alter_data, text="Add Data", font=("Calibre", 20), fg_color="black")
         add_button.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
 
-        delete_button = customtkinter.CTkButton(alter_data, text="Delete Data", font=("Calibre", 20), fg_color="black")
+        delete_button = customtkinter.CTkButton(alter_data, text="Delete Data", font=("Calibre", 20), fg_color="black", command=delete_data)
         delete_button.place(relx=0.5, rely=0.7, anchor=tkinter.CENTER)
+
+        def add_data():
+            pass
+
+        def delete_data():
+            pass
 
     def get_data_window(self):
         """
@@ -111,9 +128,23 @@ class main:
 
         title = customtkinter.CTkLabel(get_data, text="Get Data", font=("Calibre", 20), corner_radius=10)
         title.place(relx=0.5, rely=0.1, anchor=tkinter.CENTER)
+        
 
     def generate_timetable_window(self):
-        pass
+        generate_timetable = tkinter.Toplevel(self.main_window)
+        generate_timetable.title("Generate Timetable")
+        generate_timetable.geometry("650x450")
+        generate_timetable.resizable(False, False)
+        generate_timetable.attributes("-topmost", True)
+
+        gt_button = customtkinter.CTkButton(generate_timetable, text="Generate Timetable", font=("Calibre", 20), fg_color="black")
+        gt_button.place(relx=0.5, rely=0.1, anchor=tkinter.CENTER)
+
+        error_label = customtkinter.CTkLabel(generate_timetable, text="", font=("Calibre", 20))
+        error_label.place(relx=0.5, rely=0.3, anchor=tkinter.CENTER)
+
+        download_button = customtkinter.CTkButton(generate_timetable, text="Download Timetable (AFTER GENERATING)", font=("Calibre", 20), fg_color="black")
+        download_button.place(relx=0.5, rely=0.7, anchor=tkinter.CENTER)
 
 
 run = main()
