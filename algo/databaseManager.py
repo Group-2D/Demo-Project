@@ -14,18 +14,20 @@ class dbManager:
     lineNo (Int) : holds the line number in a given file
     
     """
+
     def __init__(self) -> None:
 
         self.dbConnection = psycopg2.connect(
             host = "localhost",
-            dbname = "TimetableDB",
+            dbname = "timetable_gen",
             user = "postgres",
-            password = "Jimbobrimbo9", #change this to your password if testing etc...
+            password = "Lebihan01!", #change this to your password if testing etc...
             port = 5432
         )
 
         self.dbCursor = self.dbConnection.cursor()
-
+        #? add a list of tables stored in the database?
+        self.tblSet: set[str] = self.setTblSet()
         self.lineNo = 0
 
 
@@ -44,6 +46,25 @@ class dbManager:
         self.dbCursor.close()
         self.dbConnection.close()
     
+    def setTblSet(self):
+        """
+        creates a set of all tables in the database for easier searching
+
+        Returns
+        -------
+        self.tblSet
+            a set of all tables stored in the database
+        """
+        self.dbCursor.execute(
+            sql.SQL("select tablename from pg_catalog.pg_tables where schemaname != 'information_schema' and schemaname != 'pg_catalog'")
+        ) 
+
+        tblSet: set[str] = set()
+        for tbl in self.dbCursor.fetchall():
+            tblSet.add(tbl[0])
+
+        return tblSet
+        
     def selectAll(self, table: str) -> Any:
         """
         Gets all the data from a given table
@@ -58,7 +79,6 @@ class dbManager:
         """
 
         if type(table) != str:
-            print(TypeError)
             return False
 
         try:
@@ -66,8 +86,7 @@ class dbManager:
                 """SELECT * FROM %s """ % table.lower()
             )
         
-        except psycopg2.ProgrammingError as error:
-            print(error)
+        except psycopg2.ProgrammingError:
             return False
     
         else:
@@ -80,7 +99,7 @@ class dbManager:
 
         Parameters
         ----------
-        tbl_fields : List[str]
+        tbl_feilds : List[str]
             The selected fields from a table
         tbl_name : str
             The selected table 
@@ -95,34 +114,53 @@ class dbManager:
             
         """
         if type(tbl_name) != str:
-            print(TypeError)
             return False
         
+        if tbl_name not in self.tblSet:
+            return False
+               
+        columns = self.getColumns(tbl_name)
+                
         for field in tbl_fields:
-            if type(field) != str:
-                print(field, "is wrong Type", TypeError)
+            if type(field) != str or field not in columns:
                 return False
             
+
         if type(target) != str:
-            print(TypeError)
             return False
+        
+        # self.dbCursor.execute(
+        #     sql.SQL("select pg_typeof({column}) from {table}").format(
+        #         column = sql.Identifier(target),
+        #         table = sql.Identifier(tbl_name)
+        #     )
+        # )
+
+        # columnDataType = self.dbCursor.fetchone()
+
+        # if columnDataType[0] == 'character varying':
+        #     columnDataType = str
+        # elif columnDataType[0] == 'integer':
+        #     columnDataType = int
+
+        # if type(value) != columnDataType:
+        #     return False
         
         try:    
             self.dbCursor.execute(
                 sql.SQL("select {fields} from {table} where {condition} = %s").format(
                     fields = sql.SQL(',').join(
-                        sql.Identifier(n) for n in tbl_fields
+                        sql.Identifier(n.lower()) for n in tbl_fields
                     ),
                     table = sql.Identifier(tbl_name),
                     condition = sql.Identifier(target)),
                     [value]
                 )
         
-        except psycopg2.ProgrammingError and psycopg2.OperationalError as error:
-            print(error)
+        except psycopg2.ProgrammingError and psycopg2.OperationalError and psycopg2.errors.UndefinedColumn:
             return False
         
-        return self.dbCursor.fetchone()
+        return
     
     def getTables(self):
         """
@@ -136,7 +174,6 @@ class dbManager:
         self.dbCursor.execute(
             sql.SQL("select tablename from pg_catalog.pg_tables where schemaname != 'information_schema' and schemaname != 'pg_catalog'")
         ) 
-
         return self.dbCursor.fetchall()
 
     def getColumns(self, tbl_name: str):
@@ -149,16 +186,16 @@ class dbManager:
             _description_
         """
         tbl_cols: set[str] = set()
+
         self.dbCursor.execute(
-            sql.SQL("select column_name from information_schema.columns where table_name = {table}").format(
-                table = sql.Identifier(tbl_name.lower())
-            )
+            sql.SQL("select column_name from information_schema.columns where table_name = %s"),
+            [tbl_name]
         )
-        
+    
         for col in self.dbCursor.fetchall():
-            print(col)
             tbl_cols.add(col[0])
         return tbl_cols
+
 
     def count_db_enteries(self, tbl_name: str, col_name: str):
         """
@@ -200,17 +237,31 @@ class dbManager:
         -------
         None
         """
-        self.dbCursor.execute(
-            sql.SQL("insert into {table} ({columns}) values %s").format(
-                table = sql.Identifier(tbl_name),
-                columns = sql.SQL(',').join(
-                    sql.Identifier(n) for n in tbl_cols
-                )),
-                [values]
-                
-        )
+        if type(tbl_name) != str and tbl_name not in self.tblSet:
+            print(TypeError)
+            return False
+        
+        for tbl in tbl_cols:
+            if type(tbl) != str:
+                return False
+        
+        try:
+            self.dbCursor.execute(
+                sql.SQL("insert into {table} ({columns}) values %s").format(
+                    table = sql.Identifier(tbl_name.lower()),
+                    columns = sql.SQL(',').join(
+                        sql.Identifier(n.lower()) for n in tbl_cols
+                    )),
+                    [values]
+                    
+            )
+            self.dbConnection.commit()
 
-        self.dbConnection.commit()
+        except psycopg2.ProgrammingError and psycopg2.OperationalError as error:
+            print(error)
+            return False
+    
+        return
         # ? do we need to keep this ^ the above works for multiple columns with different data types to be inserted
         # self.dbCursor.execute(
         #     sql.SQL("insert into {table} ({column}) values (%s)").format(
@@ -222,7 +273,7 @@ class dbManager:
 
         return 
     
-    def removeDataEqual(self, tbl_name: str, tbl_column: str, value: Any) -> None:
+    def removeDataEqual(self, tbl_name: str, tbl_column: str, value: Any):
         """
         removes data from a given table
 
@@ -235,6 +286,14 @@ class dbManager:
         value : Any
             the value being removed
         """
+        if type(tbl_name) != str and tbl_name not in self.tblSet:
+            print(TypeError, "check the table is in the database")
+            return False
+    
+        if type(tbl_column) != str:
+            print(TypeError, "check the column is in ")
+            return False
+
         self.dbCursor.execute(
             sql.SQL("DELETE FROM {table} WHERE {column} = %s").format(
                 table = sql.Identifier(tbl_name),
@@ -246,19 +305,7 @@ class dbManager:
 
         return
 
-    def count_db_entries(self, tbl_name: str, col_name: str):
-        
-        self.dbCursor.execute(
-            sql.SQL("select count({column_name}) from {table}").format(
-                table = sql.Identifier(tbl_name.lower()),
-                column_name = sql.Identifier(col_name.lower())
-
-            )
-        )
-
-        return
-
-    def removeTable(self, tbl_name: str) -> None:
+    def removeTable(self, tbl_name: str):
         """
         removes a given table and all referenced tables from the database
 
@@ -267,10 +314,20 @@ class dbManager:
         tble_name : str
             name of the table being dropped
         """
-        self.dbCursor.execute(
-            """DROP TABLE IF EXISTS %s CASCADE;""" % tbl_name
-        )
-        self.dbConnection.commit()
+        if type(tbl_name) != str and tbl_name not in self.tblSet:
+            return False
+        try:
+            self.dbCursor.execute(
+                """DROP TABLE IF EXISTS %s CASCADE;""" % tbl_name
+            )
+            self.dbConnection.commit()
+
+            self.tblSet.remove(tbl_name)
+
+        except psycopg2.ProgrammingError and psycopg2.OperationalError as error:
+            print(error)
+            return False
+
         return 
     
 
@@ -304,18 +361,11 @@ class dbManager:
             self.dbConnection.commit()
             
         return 
-    
-
-
 
 def main():
 
     session = dbManager()
-
-    session.getTables()
-
-    print(session.dbCursor.fetchall())
-
+    print(session.selectOnCondition(["lecturer_fname", "lecturer_lname"], "lecturer", "lecturer_fname", None))
     session.dbClose()
 
 
