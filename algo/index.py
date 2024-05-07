@@ -76,6 +76,13 @@ class main:
             self.file_name.configure(text=file_path)
 
     def alter_data_window(self):
+
+        def add_data():
+            pass
+
+        def delete_data():
+            pass
+        
         alter_data = tkinter.Toplevel(self.main_window)
         alter_data.title("Add/Delete Data")
         alter_data.geometry("650x450")
@@ -109,12 +116,6 @@ class main:
         delete_button = customtkinter.CTkButton(alter_data, text="Delete Data", font=("Calibre", 20), fg_color="black", command=delete_data)
         delete_button.place(relx=0.5, rely=0.7, anchor=tkinter.CENTER)
 
-        def add_data():
-            pass
-
-        def delete_data():
-            pass
-
     def get_data_window(self):
         """
         Select all
@@ -137,7 +138,7 @@ class main:
         generate_timetable.resizable(False, False)
         generate_timetable.attributes("-topmost", True)
 
-        gt_button = customtkinter.CTkButton(generate_timetable, text="Generate Timetable", font=("Calibre", 20), fg_color="black")
+        gt_button = customtkinter.CTkButton(generate_timetable, text="Generate Timetable", font=("Calibre", 20), fg_color="black", command=timetable.main)
         gt_button.place(relx=0.5, rely=0.1, anchor=tkinter.CENTER)
 
         error_label = customtkinter.CTkLabel(generate_timetable, text="", font=("Calibre", 20))
