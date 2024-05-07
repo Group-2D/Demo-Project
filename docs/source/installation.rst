@@ -67,11 +67,11 @@ Installation Guide For Python Libraries:
 
 For installing the various Python Libraries, we recommend using the package manager `pip <https://pypi.org/project/pip/>`_
 
-- Psycopg2: 2.9.9
+To install all required libraries for the timetable generator to work, please use the following command from a terminal where its directory is the root director of the program.
 
 ::
 
-    pip install psycopg2
+    pip install -r requirements.txt
 
 - Kivy
 
