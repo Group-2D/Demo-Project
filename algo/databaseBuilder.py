@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 ### File is used to build the Postgres SQL ###
 from typing import Any
 
@@ -120,7 +119,6 @@ def insertDataToDb(dbCursor: Any):
             ('RLT2', 160, 4), 
             ('R1.03', 24, 4) ;
         """)
-=======
 ### File is used to build the Postgres SQL ###
 from typing import Any
 
@@ -242,5 +240,4 @@ def insertDataToDb(dbCursor: Any):
             ('RLT2', 160, 4), 
             ('R1.03', 24, 4) ;
         """)
->>>>>>> Stashed changes
     return

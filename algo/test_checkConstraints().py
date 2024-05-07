@@ -1,6 +1,6 @@
 import unittest
-from unittest.mock import MagicMock
 from parameterized import parameterized
+from unittest.mock import MagicMock
 
 from algorithm_with_db_functionality import checkConstraints
 
