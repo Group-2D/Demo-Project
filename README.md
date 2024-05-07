@@ -6,7 +6,7 @@ The project is designed to generate a university timetable.
 
 1. [Description](#description)
 2. [Technologies](#technologies)
-3. [Installastion](#installation)
+3. [Installation](#installation)
 4. [Final Steps](#final-setup)
 5. [Program Guide](#how-to-use-the-project)
 6. [Credits](#credits)
