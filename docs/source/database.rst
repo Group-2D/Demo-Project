@@ -18,4 +18,4 @@ Database ERD
 Generating a Timetable
 ~~~~~~~~~~~~~~~~~~~~~~
 The algorithm reads the database to extract the information needed on modules, lecturer and rooms, so they can be processed in generating the lectures which can then populate the lecture table in the DB, creating the timetable.
-Known Problems
+
