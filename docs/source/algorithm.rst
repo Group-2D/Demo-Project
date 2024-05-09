@@ -1,7 +1,7 @@
-Algorithm.py
+Algorithm.with_db_functionality.py
 ----------------
 
-To run the algorithm, press play on VS Code. Now, it should work. 
+To run the algorithm, press play in a Python IDE of your choice. Now, it should work. 
 
 Use Case Example
 -----------------
