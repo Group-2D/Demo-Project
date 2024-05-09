@@ -108,5 +108,6 @@ Final Steps:
 
 3. Save these changes in the file.
 
-After making these changes, the algorithm should run by running ``algorithm_with_db functionality.py`` 
+After making these changes, the main algorithm code should run by running ``algorithm_with_db functionality.py`` within a Python compatible IDE of your choice.
+The example GUI (without back_end functionality) should be run from ``main.py`` without debugging.
 
