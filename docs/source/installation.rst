@@ -108,5 +108,5 @@ Final Steps:
 
 3. Save these changes in the file.
 
-After making these changes, the project should run.
+After making these changes, the algorithm should run by running ``algorithm_with_db functionality.py`` 
 
