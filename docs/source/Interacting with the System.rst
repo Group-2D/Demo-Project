@@ -1,5 +1,5 @@
 ==================
-Interacting with the System
+Interacting with the System .. _Interacting with the System
 ==================
 
 Interactions between the Database, GUI, and backend algorthirm use the dbManager class stored in the databaseManger.py file
@@ -11,7 +11,7 @@ Section 1 - Getting data
 To select all data from the table, you need to use the selectAll method
 
 As the user, this is done through the GUI, you will need to navigate the GUI screens 
-:ref 'gui-navigation'
+:ref: 'gui-navigation'
 
 The GUI will run the users input and select the corresponding table as long as the table is spelt correctly and in the database, otherwise, an error will be returned along with no table data.
 
@@ -22,7 +22,7 @@ If the input is correct, all the data in the table will be returned as outputted
 To select data stored in a table that is equal to a value, you need to use the selectOnCondition method.
 
 As the user, this is done through the GUI, you will nedd to navigate the GUI screens
-ref: 'gui_navigation'
+:ref: 'gui_navigation'
 
 The user needs to input serveral values:
   1. The table name
@@ -117,7 +117,7 @@ This will explain how to properly edit the dbConnection to get the system runnin
 Requirements
 -----------
 As the user, you will to have these requirements before you can run this part of system. 
-(see ref: 'requirements')
+(see :ref: 'requirements')
   - pdAdmin locally installed
   - python 
 
