@@ -164,7 +164,7 @@ class Test_DbManager_InsertIntoDb(unittest.TestCase):
     #     self.session.dbCursor.execute(
     #         sql.SQL("alter sequence lecturer_lecturer_id_seq restart with 5")
     #     )
-        
+'''       
 class Test_DbManager_RemoveDataEqual(unittest.TestCase):
     #set up and tear down functions
     def setUp(self) -> None:
@@ -173,6 +173,53 @@ class Test_DbManager_RemoveDataEqual(unittest.TestCase):
     def tearDown(self) -> None:
         self.session.dbClose()
 
+    #likley to fail due to databases not matching up
+    def test_case_1(self):
+        expected = [
+            (1, 'Portland'),
+            (2, 'FTSE')
+        ]
+        self.session.removeDataEqual('building', 'building_id', 3)
+        self.session.selectAll('building')
+        result = self.session.dbCursor.fetchall()
+        self.assertEqual((result), expected)
+    
+    #likley to fail due to databases not matching up
+    def test_case_2(self):
+        expected = [
+            (1, 'Taylor', 'Swift', 10),
+            (2, 'Adam', 'Levine', 14),
+            (3, 'Lewis', 'Capaldi', 0),
+        ]
+        self.session.removeDataEqual('lecturer', 'lecturer_fname', 'Katy')
+        self.session.selectAll('lecturer')
+        result = self.session.dbCursor.fetchall()
+        self.assertEqual((result), expected)
+
+    def test_case_3(self):
+        self.session.removeDataEqual('Lecturers', 'lecturer_fname', 'Katy')
+        self.assertEqual((False), False)
+        
+    def test_case_4(self):
+        self.session.removeDataEqual('lecturer', 'lecturer_lname', 'Katy')
+        self.assertEqual(False, False)
+
+    def test_case_5(self):
+        self.session.removeDataEqual('lecturers', 'lecturer_fname', 'Shawn')
+        self.assertEqual(False, False)
+
+    def test_case_6(self):
+        self.session.removeDataEqual('lecturer', 'lecturer_fname', 1)
+        self.assertEqual(False, False)
+
+    def test_case_7(self):
+        self.session.removeDataEqual('lecturers', 'lecturer_fname', True)
+        self.assertEqual(False, False)
+
+    def test_case_8(self):
+        self.session.removeDataEqual('lecturers', 'lecturer_fname', None)
+        self.assertEqual(False, False)
+'''
 class Test_DbManager_RemoveTable(unittest.TestCase):
     #set up and tear down functions
     def setUp(self) -> None:

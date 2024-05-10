@@ -290,18 +290,32 @@ class dbManager:
             print(TypeError, "check the table is in the database")
             return False
     
+        self.setTblSet()
+
+        if tbl_name not in self.tblSet:
+            return False
+        
         if type(tbl_column) != str:
             print(TypeError, "check the column is in ")
             return False
+        
+        columns = self.getColumns(tbl_name)
 
-        self.dbCursor.execute(
-            sql.SQL("DELETE FROM {table} WHERE {column} = %s").format(
-                table = sql.Identifier(tbl_name),
-                column = sql.Identifier(tbl_column)),
-                [value]
-            )
+        if tbl_column not in columns:
+            return False
+
+        try:
+            self.dbCursor.execute(
+                sql.SQL("DELETE FROM {table} WHERE {column} = %s").format(
+                    table = sql.Identifier(tbl_name),
+                    column = sql.Identifier(tbl_column)),
+                    [value]
+                )
     
-        self.dbConnection.commit()
+            self.dbConnection.commit()
+
+        except psycopg2.ProgrammingError and psycopg2.OperationalError and psycopg2.errors.UndefinedColumn and psycopg2.errors.UndefinedFunction:
+            return False
 
         return
 
