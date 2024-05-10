@@ -1,9 +1,9 @@
 Algorithm.with_db_functionality.py
 ----------------
 
-To run the algorithm, press play in a Python IDE of your choice. Now, it should work. 
+To run the timetable generating algorithrim, you currently need to locate the algorithirm.py file and then run file.
 
-Use Case Example
+Generating a Timetable
 -----------------
+To generate a timetable, firstly, we recommend population the database (see ref: '_database' and ref: '_Interacting with the System') to prevent errors and to generate the timeable as it requires data from the database. Once you run the algorthirm file, the timetbable will be genrated and stored in the database. 
 
-The user wants to generate the timetable. Data should already have been entered into the database, so all the user needs to do is press the button to generate. Once this happens the timetable will be generated and the results stored back into the database.
