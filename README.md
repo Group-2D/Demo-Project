@@ -118,7 +118,7 @@ This section is used to show the stucture of the database and various use cases 
 ### Group 2D 
 
 * Kieron / up2109872
-*
+* bfararjeh / up2157533
 *
 *
 *
